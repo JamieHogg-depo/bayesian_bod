@@ -1,0 +1,96 @@
+## -----------------------------------------------------------------------------
+## Setup ## --------------------------------------------------------------------
+## -----------------------------------------------------------------------------
+
+# Packages
+library(tidyverse)
+library(scales)
+library(sf)
+library(MASS)
+library(patchwork)
+library(readr)
+library(readxl)
+library(grid)
+library(gridExtra)
+rm(list = ls())
+
+export <- FALSE
+
+## Functions ## ----------------------------------------------------------------
+
+jsave <- function(filename, base_folder, 
+                  plot = last_plot(), 
+                  square = T, square_size = 5000, 
+                  ratio = c(6,9)){
+  if(square){
+    ggsave(filename = filename,
+           plot = plot,
+           path = base_folder,
+           dpi = 1000,
+           width = square_size,
+           height = square_size,
+           scale = 1,
+           units = "px")
+  }else{
+    total = square_size^2
+    a <- sqrt((total*ratio[1])/ratio[2])
+    b <- (ratio[2]*a)/ratio[1]
+    ggsave(filename = filename,
+           plot = plot, 
+           path = base_folder,
+           dpi = 1000,
+           width = round(b),
+           height = round(a),
+           scale = 1,
+           units = "px")
+  }
+}
+
+make_numeric_decimal <- function(.data){
+  df <- .data
+  cols_to_format <- unlist(lapply(df, is.numeric))
+  df[,cols_to_format] <- bind_cols(lapply(df[,cols_to_format], sprintf, fmt = '%#.2f'))
+  return(df)
+}
+
+addBoxLabel <- function(i, color = "white", size = 0.5){
+    list(
+      annotate("rect", 
+               xmin = lims$xmin[i], xmax = lims$xmax[i],
+               ymin = lims$ymin[i], ymax = lims$ymax[i],
+               color = color, fill = NA, size = size)
+    )
+}
+
+## Load Data ## ----------------------------------------------------------------
+
+# Load mappopData
+load("data/mappopDATA.Rdata")
+rm(age_labs, hd, hr, hr_labs, sa2)
+map <- lga$map %>% 
+  mutate(geography_no = as.integer(LGA_CODE16))
+
+# Load model results
+files_to_load = list.files("data/YLLoutputs20CHD20230614013642", pattern = "*.csv", full.names = T)
+df_list = lapply(files_to_load, read.csv)
+names(df_list) <- str_remove(list.files("data/YLLoutputs20CHD20230614013642"), " count table_deleted y.csv")
+
+## Other code ## --------------------------------------------------------------
+
+# City Insets 
+lims <- data.frame(
+  xmin = c(152.6, 150.35, 144.5, 115.45, 138.1, 146.8, 148.6, 130.3),
+  xmax = c(153.6, 151.35, 145.5, 116.45, 139.1, 147.8, 149.6, 131.3),
+  ymin = -c(28, 34.4, 38.4, 32.5, 35.4, 43.4, 35.8, 13),
+  ymax = -c(27, 33.4, 37.4, 31.5, 34.4, 42.4, 34.8, 12),
+  city = c("Brisbane", "Sydney", "Melbourne", "Perth", "Adelaide", "Hobart", "Canberra", "Darwin"),
+  position = c("r", "r", "b", "l", "b", "b", "r", "l"),
+  inset_labs = c("B - Brisbane (Qld)", "S - Sydney (NSW)",
+                 "M - Melbourne (Vic)", "P - Perth (WA)",
+                 "A - Adelaide (SA)", "H - Hobart (Tas)",
+                 "C - Canberra (ACT)", "D - Darwin (NT)")
+) %>% 
+  mutate(initials = str_sub(city, 1, 1)) %>% 
+  filter(city == "Perth")
+
+## END SCRIPT ## --------------------------------------------------------------
