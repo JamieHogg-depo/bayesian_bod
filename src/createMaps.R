@@ -39,7 +39,6 @@ base <- map_obj$female_yll %>%
    scale_fill_viridis_c(begin = 0, end = 1, 
                         direction = -1,
                         option = "B", limits = col_range)+
-   labs(fill = "YLL")+
    theme(legend.position = "none",
         text = element_text(size = 10),
         plot.title = element_text(margin = margin(0,0,2,0)),
@@ -47,7 +46,7 @@ base <- map_obj$female_yll %>%
 
 # base map_with legend
 temp <- base +
-    labs(fill = "YLL")+
+    labs(fill = "ASYLL")+
     guides(fill = guide_colourbar(barwidth = 15, 
                                   title.position = "top",
                                   title.hjust = 0.5))+
