@@ -70,11 +70,25 @@ load("data/mappopDATA.Rdata")
 rm(age_labs, hd, hr, hr_labs, sa2)
 map <- lga$map %>% 
   mutate(geography_no = as.integer(LGA_CODE16))
+# convert seifa
+lga$seifa_ra$LGA_Code <- as.integer(lga$seifa_ra$LGA_Code)
+lga$seifa_ra$RA_Name <- str_remove(str_remove(lga$seifa_ra$RA_Name, " Australia"), " of")
 
-# Load model results
+# Load CHD_YLL
 files_to_load = list.files("data/YLLoutputs20CHD20230614013642", pattern = "*.csv", full.names = T)
-df_list = lapply(files_to_load, read.csv)
-names(df_list) <- str_remove(list.files("data/YLLoutputs20CHD20230614013642"), " count table_deleted y.csv")
+CHDYLL_list = lapply(files_to_load, read.csv)
+names(CHDYLL_list) <- str_remove(list.files("data/YLLoutputs20CHD20230614013642"), " count table_deleted y.csv")
+
+# Load ATH_YLL
+files_to_load = list.files("data/YLLsfor%20asthma20230619125714", pattern = "*.csv", full.names = T)
+ATHYLL_list = lapply(files_to_load, read.csv)
+names(ATHYLL_list) <- str_remove(list.files("data/YLLsfor%20asthma20230619125714",
+                                            pattern = "*.csv"), " count table.csv")
+
+# grand list 
+df_list <- c(CHDYLL_list, ATHYLL_list)
+asyll_list <- df_list[str_detect(names(df_list), "ASYLL")]
+yll_list <- df_list[str_detect(names(df_list), " YLL")]
 
 ## Other code ## --------------------------------------------------------------
 
@@ -92,6 +106,10 @@ lims <- data.frame(
                  "C - Canberra (ACT)", "D - Darwin (NT)")
 ) %>% 
   mutate(initials = str_sub(city, 1, 1)) %>% 
-  filter(city == "Perth")
+  filter(city == "Perth") %>% 
+  mutate(xmin = 115.71,
+         xmax = 116.12,
+         ymin = -32.15,
+         ymax = -31.74)
 
 ## END SCRIPT ## --------------------------------------------------------------

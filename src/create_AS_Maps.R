@@ -2,11 +2,27 @@
 ## MAPS ## ---------------------------------------------------------------------
 ## -----------------------------------------------------------------------------
 
-map_obj <- list()
+source("src/ms.R")
+
+## Age-standardised YLLs ## ----------------------------------------------------
+
+for(j in 1:length(asyll_list)){
+
+# get specs
+temp <- strsplit(str_replace(names(asyll_list)[j], " ASYLL", ""), split= '_', fixed=TRUE)
+condition <- temp[[1]][2]
+sex <- temp[[1]][3]
+file_index <- str_extract(names(asyll_list)[j], "(?<=LGA_).*?(?=\\s)")
+rm(temp)
+
+# Progress
+message("Condition: ", condition, "\nSex: ", sex)
+
+# select temporary dataset
+df_temp <- asyll_list[[j]]
 
 # create map data list
-map_obj$female_yll <- left_join(df_list$`LGA_CHD_Female ASYLL`, 
-                            map, by = "geography_no") %>% 
+map_temp <- left_join(df_temp,map, by = "geography_no") %>% 
   st_as_sf() %>%
   st_transform(4326)
 
@@ -16,20 +32,18 @@ wa_border <- map %>%
   st_as_sf() %>%
   st_transform(4326)
 
-## Posterior YLL ## ------------------------------------------------------------
-
 # LGA_CHD_Female ASYLL
 year_plt_list <- list()
-seq_years <- unique(df_list$`LGA_CHD_Female ASYLL`$year)
+seq_years <- unique(df_temp$year)
 
-# loop over years
+## loop over years ## ---------------------------------------------------------
 for(t in 1:6){
   
 # range of posterior medians
-col_range <- range(map_obj$female_yll$point)
+col_range <- range(df_temp$point)
   
 # base map - no legend
-base <- map_obj$female_yll %>% 
+base <- map_temp %>% 
    filter(T_id == t) %>% 
    ggplot(aes(fill = point))+
    theme_void()+
@@ -72,8 +86,8 @@ year_plt_list[[t]] <- arrangeGrob(grobs = list(base_boxes, perth_inset),
                                    layout_matrix  = lay,
                                    top = textGrob(as.character(seq_years[t]),gp=gpar(fontsize=10)))
 
-# Keep track 
-message("Finished ", t)
+# Progress 
+message("---- Year: ", seq_years[t])
 
 }
 
@@ -82,6 +96,8 @@ lay <- rbind(c(1,2,3),
              c(4,5,6),
              c(7,7,7))
 full_inset_plt <- arrangeGrob(grobs = c(year_plt_list, list(base_legend)), layout_matrix  = lay)
-jsave(plot = full_inset_plt, filename = "female_chd_asyll.png", base_folder = "plts", square = F)
+jsave(plot = full_inset_plt, filename = paste0("map_", file_index, "_ASYLL.png"), base_folder = "plts", square = F)
+
+}
 
 ## END SCRIPT ## --------------------------------------------------------------
