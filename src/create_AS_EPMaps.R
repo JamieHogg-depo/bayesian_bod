@@ -34,7 +34,7 @@ wa_border <- map %>%
 
 # LGA_CHD_Female ASYLL
 year_plt_list <- list()
-seq_years <- unique(df_temp$year)
+seq_years <- sort(unique(df_temp$year))
 
 ## loop over years ## ---------------------------------------------------------
 for(t in 1:6){
