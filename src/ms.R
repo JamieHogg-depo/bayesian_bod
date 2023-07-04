@@ -63,6 +63,22 @@ addBoxLabel <- function(i, color = "white", size = 0.5){
     )
 }
 
+## Combinations ## -------------------------------------------------------------
+
+## Metrics (5): YLL, YLD, DALY, ASYLL, ASYLD, ASDALY, Prev
+## Sex (3): Persons, Male, Female
+## Conditions (2): CHD, Asthma
+## Types of figures (4): map_, mapEP, temporalbox, caterpillarbyyear
+
+# Figure labelling system
+## `figuretype`_`condition`_`metric`_`sex`
+## Example: `map_Asthma_ASYLL_Persons.png`
+
+## Notes
+'
+- Need different scripts for each 
+'
+
 ## Load Data ## ----------------------------------------------------------------
 
 # Load mappopData
@@ -70,6 +86,13 @@ load("data/mappopDATA.Rdata")
 rm(age_labs, hd, hr, hr_labs, sa2)
 map <- lga$map %>% 
   mutate(geography_no = as.integer(LGA_CODE16))
+
+# WA outline
+wa_border <- suppressMessages(map %>% 
+                                summarise(geometry = st_union(geometry)) %>% 
+                                st_as_sf() %>%
+                                st_transform(4326))
+
 # convert seifa
 lga$seifa_ra$LGA_Code <- as.integer(lga$seifa_ra$LGA_Code)
 lga$seifa_ra$RA_Name <- str_remove(str_remove(lga$seifa_ra$RA_Name, " Australia"), " of")
@@ -85,12 +108,39 @@ ATHYLL_list = lapply(files_to_load, read.csv)
 names(ATHYLL_list) <- str_remove(list.files("data/YLLsfor%20asthma20230619125714",
                                             pattern = "*.csv"), " count table.csv")
 
-# grand list 
+## Load Asthma YLDs ## ---------------------------------------------------------
+files_to_load = list.files("data/wMrPResults LGA YLD asthma20230704021943", pattern = "*.xlsx", full.names = T)
+ATHYLD_list = lapply(files_to_load, readxl::read_xlsx)
+# ASYLD with all sex categories
+ATHYLD_list[[1]] <- bind_rows(mutate(ATHYLD_list[[1]], sex = "Persons"), ATHYLD_list[[2]])
+# YLD with all sex categories
+ATHYLD_list[[3]] <- bind_rows(mutate(ATHYLD_list[[3]], sex = "Persons"), ATHYLD_list[[4]])
+# Prev with all sex categories
+ATHYLD_list[[5]] <- bind_rows(mutate(ATHYLD_list[[5]], sex = "Persons"), ATHYLD_list[[6]])
+# set 4-6 to null
+ATHYLD_list[c(2,4,6)] <- NULL
+# rename
+names(ATHYLD_list) <- c("Asthma_ASYLD",
+                        "Asthma_YLD",
+                        "Asthma_Prev")
+# fix columns for Asthma_Prev
+colnames(ATHYLD_list$Asthma_Prev) <- str_replace(colnames(ATHYLD_list$Asthma_Prev), 
+                                                 "mrp_", "")
+# split into Persons, Male and Female
+x1 <- split(ATHYLD_list$Asthma_ASYLD,ATHYLD_list$Asthma_ASYLD$sex)
+names(x1) <- paste0("Asthma_ASYLD_", names(x1))
+x2 <- split(ATHYLD_list$Asthma_YLD,ATHYLD_list$Asthma_YLD$sex)
+names(x2) <- paste0("Asthma_YLD_", names(x2))
+x3 <- split(ATHYLD_list$Asthma_Prev,ATHYLD_list$Asthma_Prev$sex)
+names(x3) <- paste0("Asthma_Prev_", names(x3))
+ATHYLD_list <- c(x1, x2, x3); rm(x1, x2, x3)
+
+## Grand list ## --------------------------------------------------------------- 
 df_list <- c(CHDYLL_list, ATHYLL_list)
 asyll_list <- df_list[str_detect(names(df_list), "ASYLL")]
 yll_list <- df_list[str_detect(names(df_list), " YLL")]
 
-## Other code ## --------------------------------------------------------------
+## Other code ## ---------------------------------------------------------------
 
 # City Insets 
 lims <- data.frame(
