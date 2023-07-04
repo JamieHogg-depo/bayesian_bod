@@ -97,16 +97,27 @@ wa_border <- suppressMessages(map %>%
 lga$seifa_ra$LGA_Code <- as.integer(lga$seifa_ra$LGA_Code)
 lga$seifa_ra$RA_Name <- str_remove(str_remove(lga$seifa_ra$RA_Name, " Australia"), " of")
 
-# Load CHD_YLL
-files_to_load = list.files("data/YLLoutputs20CHD20230614013642", pattern = "*.csv", full.names = T)
+## Load CHD YLLs ## ---------------------------------------------------------
+files_to_load = list.files("data/YLLoutputs20CHD20230614013642", 
+                           pattern = "*.csv", full.names = T)
 CHDYLL_list = lapply(files_to_load, read.csv)
-names(CHDYLL_list) <- str_remove(list.files("data/YLLoutputs20CHD20230614013642"), " count table_deleted y.csv")
+names(CHDYLL_list) <- c("CHD_ASYLL_Female",
+                        "CHD_YLL_Female",
+                        "CHD_ASYLL_Male",
+                        "CHD_YLL_Male",
+                        "CHD_ASYLL_Persons",
+                        "CHD_YLL_Persons")
 
-# Load ATH_YLL
-files_to_load = list.files("data/YLLsfor%20asthma20230619125714", pattern = "*.csv", full.names = T)
+## Load Asthma YLLs ## ---------------------------------------------------------
+files_to_load = list.files("data/YLLsfor%20asthma20230619125714", 
+                           pattern = "*.csv", full.names = T)
 ATHYLL_list = lapply(files_to_load, read.csv)
-names(ATHYLL_list) <- str_remove(list.files("data/YLLsfor%20asthma20230619125714",
-                                            pattern = "*.csv"), " count table.csv")
+names(ATHYLL_list) <- c("Asthma_ASYLL_Female",
+                        "Asthma_YLL_Female",
+                        "Asthma_ASYLL_Male",
+                        "Asthma_YLL_Male",
+                        "Asthma_ASYLL_Persons",
+                        "Asthma_YLL_Persons")
 
 ## Load Asthma YLDs ## ---------------------------------------------------------
 files_to_load = list.files("data/wMrPResults LGA YLD asthma20230704021943", pattern = "*.xlsx", full.names = T)
