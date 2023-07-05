@@ -19,49 +19,7 @@ export <- FALSE
 
 ## Functions ## ----------------------------------------------------------------
 
-jsave <- function(filename, base_folder, 
-                  plot = last_plot(), 
-                  square = T, square_size = 5000, 
-                  ratio = c(6,9)){
-  if(square){
-    ggsave(filename = filename,
-           plot = plot,
-           path = base_folder,
-           dpi = 1000,
-           width = square_size,
-           height = square_size,
-           scale = 1,
-           units = "px")
-  }else{
-    total = square_size^2
-    a <- sqrt((total*ratio[1])/ratio[2])
-    b <- (ratio[2]*a)/ratio[1]
-    ggsave(filename = filename,
-           plot = plot, 
-           path = base_folder,
-           dpi = 1000,
-           width = round(b),
-           height = round(a),
-           scale = 1,
-           units = "px")
-  }
-}
-
-make_numeric_decimal <- function(.data){
-  df <- .data
-  cols_to_format <- unlist(lapply(df, is.numeric))
-  df[,cols_to_format] <- bind_cols(lapply(df[,cols_to_format], sprintf, fmt = '%#.2f'))
-  return(df)
-}
-
-addBoxLabel <- function(i, color = "white", size = 0.5){
-    list(
-      annotate("rect", 
-               xmin = lims$xmin[i], xmax = lims$xmax[i],
-               ymin = lims$ymin[i], ymax = lims$ymax[i],
-               color = color, fill = NA, size = size)
-    )
-}
+source("src/moreFuns.R")
 
 ## Combinations ## -------------------------------------------------------------
 
@@ -85,7 +43,8 @@ addBoxLabel <- function(i, color = "white", size = 0.5){
 load("data/mappopDATA.Rdata")
 rm(age_labs, hd, hr, hr_labs, sa2)
 map <- lga$map %>% 
-  mutate(geography_no = as.integer(LGA_CODE16))
+  mutate(geography_no = as.integer(LGA_CODE16)) %>% 
+  rmapshaper::ms_simplify(.,keep = 0.03)
 
 # WA outline
 wa_border <- suppressMessages(map %>% 

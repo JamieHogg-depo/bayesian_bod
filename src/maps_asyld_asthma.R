@@ -4,9 +4,9 @@
 
 source("src/ms.R")
 
-## Age-standardised YLDs ## ----------------------------------------------------
+## -----------------------------------------------------------------------------
 
-for(j in 1:length(ATHYLD_list)){
+for(j in 1:3){
   
 # specs
 sp <- unlist(str_split(names(ATHYLD_list)[j], "_"))
@@ -46,7 +46,7 @@ base <- map_temp %>%
            colour = "black", fill = NA, size = 0.2)+
    scale_fill_viridis_c(begin = 0, end = 1, 
                         direction = -1,
-                        option = "B", limits = col_range)+
+                        option = "E", limits = col_range)+
    theme(legend.position = "none",
         text = element_text(size = 10),
         plot.title = element_text(margin = margin(0,0,2,0)),
@@ -54,11 +54,11 @@ base <- map_temp %>%
 
 # base map_with legend
 temp <- base +
-    labs(fill = metric)+
-    guides(fill = guide_colourbar(barwidth = 15, 
-                                  title.position = "top",
-                                  title.hjust = 0.5))+
-    theme(legend.position = "bottom")
+  labs(fill = metric)+
+  guides(fill = guide_colourbar(barwidth = 15, 
+                                title.position = "top",
+                                title.hjust = 0.5))+
+  theme(legend.position = "bottom")
 base_legend <- get_legend(temp)
 
 # Base map with boxes
@@ -67,18 +67,18 @@ base_boxes <- base + addBoxLabel(1, color = "black", size = 0.2)
 
 # Create list of insets
 perth_inset <- base +
-    xlim(lims$xmin[1], lims$xmax[1]) +
-    ylim(lims$ymin[1], lims$ymax[1]) +
-    theme(panel.border = element_rect(colour = "black", size=0.2, fill=NA),
-          plot.title = element_text(margin = margin(0,0,2,0)),
-          plot.margin = unit(c(1,1,1,1), "mm"))
+  xlim(lims$xmin[1], lims$xmax[1]) +
+  ylim(lims$ymin[1], lims$ymax[1]) +
+  theme(panel.border = element_rect(colour = "black", size=0.2, fill=NA),
+        plot.title = element_text(margin = margin(0,0,2,0)),
+        plot.margin = unit(c(1,1,1,1), "mm"))
 
 # create full map
 lay <- rbind(c(2,1),
              c(1,1))
-year_plt_list[[t]] <- arrangeGrob(grobs = list(base_boxes, perth_inset), 
-                                   layout_matrix  = lay,
-                                   top = textGrob(seq_years[t],gp=gpar(fontsize=10)))
+year_plt_list[[t]] = arrangeGrob(grobs = list(base_boxes, perth_inset), 
+                            layout_matrix  = lay,
+                            top = textGrob(seq_years[t],gp=gpar(fontsize=10)))
 
 # Progress 
 message("---- Year: ", seq_years[t])
