@@ -56,7 +56,17 @@ wa_border <- suppressMessages(map %>%
 lga$seifa_ra$LGA_Code <- as.integer(lga$seifa_ra$LGA_Code)
 lga$seifa_ra$RA_Name <- str_remove(str_remove(lga$seifa_ra$RA_Name, " Australia"), " of")
 
-## Load CHD YLLs ## ---------------------------------------------------------
+## Six year YLLs ## ------------------------------------------------------------
+files_to_load = list.files("data/CHDand Asthma YLL results by 6 year ASYLL20230707084532", 
+                           pattern = "*.csv", full.names = T)
+YLL6y_list = lapply(files_to_load, read.csv)
+names(YLL6y_list) <- c("Asthma_ASYLL_Female",
+                       "Asthma_ASYLL_Male",
+                       "CHD_ASYLL_Female",
+                       "CHD_ASYLL_Male",
+                       "CHD_ASYLL_Persons")
+
+## Load CHD YLLs ## ------------------------------------------------------------
 files_to_load = list.files("data/YLLoutputs20CHD20230614013642", 
                            pattern = "*.csv", full.names = T)
 CHDYLL_list = lapply(files_to_load, read.csv)
