@@ -4,22 +4,36 @@
 
 source("src/ms.R")
 
-## Age-standardised YLLs ## ----------------------------------------------------
+#### ---------------------------------------------------------------------------
 
-for(j in 1:length(asyll_list)){
+for(j in 1:length(ASYLL6y_list)){
+  
+  # specs
+  sp <- unlist(str_split(names(ASYLL6y_list)[j], "_"))
+  condition <- sp[1]
+  metric <- sp[2]
+  sex <- sp[3]
+  file_index <- paste0(condition, "_", sex, "_", metric)
+  
+  # Progress
+  message("Condition: ", condition, "\nSex: ", sex, "\nMetric: ", metric)
+  
+  # select temporary dataset
+  df_temp <- left_join(asyll_list[[j]],lga$seifa_ra, 
+                       by = c("geography_no" = "LGA_Code", "year" = "Year"))
 
-# get specs
-temp <- strsplit(str_replace(names(asyll_list)[j], " ASYLL", ""), split= '_', fixed=TRUE)
-condition <- temp[[1]][2]
-sex <- temp[[1]][3]
-file_index <- str_extract(names(asyll_list)[j], "(?<=LGA_).*?(?=\\s)")
-rm(temp)
-
-# Progress
-message("Condition: ", condition, "\nSex: ", sex)
+# get new RA names
+ra_levs <- str_replace(unique(df_temp$RA_Name), " ", "\n")
 
 # select temporary dataset
-df_temp <- left_join(asyll_list[[j]],lga$seifa_ra, by = c("geography_no" = "LGA_Code", "year" = "Year")) 
+df_temp <- df_temp %>% 
+  mutate(RA_Name = factor(fct_relabel(RA_Name, ~ str_replace(., " ", "\n"))),
+         RA_Name = fct_relevel(RA_Name, "Major\nCities")) %>% 
+  mutate(IRSD_5 = factor(IRSD_5, 
+                         levels = 1:5,
+                         labels = c("Most\ndisadvantaged", 
+                                    as.character(2:4), 
+                                    "Least\ndisadvantaged")))
 
 # Plot 1
 irsd_plt <- df_temp %>% 
@@ -28,9 +42,9 @@ irsd_plt <- df_temp %>%
   theme_bw()+
   geom_boxplot()+
   labs(y = "",
-       x = "Age standardised YLLs", 
+       x = "", 
        fill = "", 
-       title = "IRSD (quintiles)")+
+       title = "Socioeconomic\nstatus")+
   scale_y_discrete(limits=rev)+
   theme(legend.position = "right",
         text = element_text(size = 10))
@@ -54,7 +68,7 @@ lay <- rbind(c(1,1),
              c(2,2))
 full_plot <- arrangeGrob(grobs = list(irsd_plt, ra_plt), 
                                   layout_matrix  = lay)
-jsave(plot = full_plot, filename = paste0("temporalbox_", file_index, "_ASYLL.png"), 
+jsave(plot = full_plot, filename = paste0("temporalbox_", file_index, ".png"), 
       base_folder = "plts", square = F, ratio = c(9,6))
 
 }
