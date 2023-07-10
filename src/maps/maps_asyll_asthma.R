@@ -6,10 +6,10 @@ source("src/ms.R")
 
 ## -----------------------------------------------------------------------------
 
-for(j in 1:3){
+for(j in 1:2){
   
 # specs
-sp <- unlist(str_split(names(ATHYLD_list)[j], "_"))
+sp <- unlist(str_split(names(ASYLL6y_list)[j], "_"))
 condition <- sp[1]
 metric <- sp[2]
 sex <- sp[3]
@@ -19,10 +19,11 @@ file_index <- paste0(condition, "_", sex, "_", metric)
 message("Condition: ", condition, "\nSex: ", sex, "\nMetric: ", metric)
   
 # select temporary dataset
-df_temp <- ATHYLD_list[[j]]
+df_temp <- ASYLL6y_list[[j]] %>% 
+  mutate(geography_no = as.character(geography_no))
 
 # create map data list
-map_temp <- left_join(df_temp,map, by = c("lga_name16" = "LGA_NAME16")) %>% 
+map_temp <- left_join(df_temp,map, by = c("geography_no" = "LGA_CODE16")) %>% 
   st_as_sf() %>%
   st_transform(4326)
 
@@ -31,7 +32,7 @@ year_plt_list <- list()
 seq_years <- unique(df_temp$year)
 
 ## loop over years ## ----------------------------------------------------------
-full_inset_plt <- createTimeMap(map_temp, "D")
+full_inset_plt <- createTimeMap(map_temp, "E")
 jsave(plot = full_inset_plt, filename = paste0("map_", file_index, ".png"), base_folder = "plts", square = F)
 
 }

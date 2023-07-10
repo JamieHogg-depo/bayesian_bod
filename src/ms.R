@@ -61,10 +61,10 @@ files_to_load = list.files("data/CHDand Asthma YLL results by 6 year ASYLL202307
                            pattern = "*.csv", full.names = T)
 ASYLL6y_list = lapply(files_to_load, read.csv)
 names(ASYLL6y_list) <- c("Asthma_ASYLL_Female",
-                       "Asthma_ASYLL_Male",
-                       "CHD_ASYLL_Female",
-                       "CHD_ASYLL_Male",
-                       "CHD_ASYLL_Persons")
+                         "Asthma_ASYLL_Male",
+                         "CHD_ASYLL_Female",
+                         "CHD_ASYLL_Male",
+                         "CHD_ASYLL_Persons")
 
 ## Load CHD YLLs ## ------------------------------------------------------------
 files_to_load = list.files("data/YLLoutputs20CHD20230614013642", 
@@ -119,6 +119,15 @@ ATHYLD_list <- c(x1, x2, x3); rm(x1, x2, x3)
 df_list <- c(CHDYLL_list, ATHYLL_list)
 asyll_list <- df_list[str_detect(names(df_list), "ASYLL")]
 yll_list <- df_list[str_detect(names(df_list), " YLL")]
+
+all_persons <- list(CHD = list(YLL = CHDYLL_list$CHD_YLL_Persons,
+                               ASYLL =ASYLL6y_list$CHD_ASYLL_Persons,
+                               YLD = list(),
+                               ASYLD = list()),
+                Asthma = list(YLL = ATHYLL_list$Asthma_YLL_Persons,
+                              ASYLL = ATHYLL_list$Asthma_ASYLL_Persons,
+                              YLD = ATHYLD_list$Asthma_YLD_Persons,
+                              ASYLD = ATHYLD_list$Asthma_ASYLD_Persons))
 
 ## Other code ## ---------------------------------------------------------------
 
