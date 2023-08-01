@@ -40,11 +40,11 @@ source("src/moreFuns.R")
 ## Load Data ## ----------------------------------------------------------------
 
 # Load mappopData
-load("data/mappopDATA.Rdata")
+load("data/mappopDATA_2008_2020_updated.Rdata")
 rm(age_labs, hd, hr, hr_labs, sa2)
 map <- lga$map %>% 
-  mutate(geography_no = as.integer(LGA_CODE16)) %>% 
-  rmapshaper::ms_simplify(.,keep = 0.03)
+  rmapshaper::ms_simplify(.,keep = 0.03) %>% 
+  mutate(geography_no = as.integer(LGA_COD)) 
 
 # WA outline
 wa_border <- suppressMessages(map %>% 
@@ -128,6 +128,13 @@ all_persons <- list(CHD = list(YLL = CHDYLL_list$CHD_YLL_Persons,
                               ASYLL = ATHYLL_list$Asthma_ASYLL_Persons,
                               YLD = ATHYLD_list$Asthma_YLD_Persons,
                               ASYLD = ATHYLD_list$Asthma_ASYLD_Persons))
+
+## Grand list 2 ## -------------------------------------------------------------
+
+all_persons2 <- list(CHD_ASYLL_Persons = ASYLL6y_list$CHD_ASYLL_Persons,
+                     Asthma_ASYLL_Persons = ATHYLL_list$Asthma_ASYLL_Persons,
+                     Asthma_ASYLD_Persons = ATHYLD_list$Asthma_ASYLD_Persons,
+                     Asthma_prev_Persons = ATHYLD_list$Asthma_Prev_Persons)
 
 ## Other code ## ---------------------------------------------------------------
 
