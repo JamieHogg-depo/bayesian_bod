@@ -41,7 +41,7 @@ source("src/moreFuns.R")
 
 # Load mappopData
 load("data/mappopDATA_2008_2020_updated.Rdata")
-rm(age_labs, hd, hr, hr_labs, sa2)
+rm(age_labs, hd, hr, sa2)
 map <- lga$map %>% 
   rmapshaper::ms_simplify(.,keep = 0.03) %>% 
   mutate(geography_no = as.integer(LGA_COD)) 
@@ -55,6 +55,26 @@ wa_border <- suppressMessages(map %>%
 # convert seifa
 lga$seifa_ra$LGA_Code <- as.integer(lga$seifa_ra$LGA_Code)
 lga$seifa_ra$RA_Name <- str_remove(str_remove(lga$seifa_ra$RA_Name, " Australia"), " of")
+
+# Average population
+pop <- lga$pop %>% 
+  group_by(Year, LGA_Code) %>% 
+  summarise(N = sum(N),
+            .groups = "drop") %>% 
+  group_by(LGA_Code) %>% 
+  summarise(N = mean(N)) %>% 
+  mutate(LGA_Code = as.integer(LGA_Code))
+
+# SEIFA and remotenesss
+seifa_ra <- lga$seifa_ra %>% 
+  group_by(LGA_Name, LGA_Code, RA_Name, IRSD_5) %>% 
+  tally() %>% 
+  ungroup() %>% 
+  dplyr::select(-n) %>% 
+  left_join(.,pop) %>% 
+  mutate(N_c = as.factor(cut_number(N, 10, labels = FALSE)),
+         ra = as.factor(RA_Name),
+         ra = fct_relevel(ra, "Major Cities"))
 
 ## Six year YLLs ## ------------------------------------------------------------
 files_to_load = list.files("data/CHDand Asthma YLL results by 6 year ASYLL20230707084532", 
@@ -115,6 +135,13 @@ x3 <- split(ATHYLD_list$Asthma_Prev,ATHYLD_list$Asthma_Prev$sex)
 names(x3) <- paste0("Asthma_Prev_", names(x3))
 ATHYLD_list <- c(x1, x2, x3); rm(x1, x2, x3)
 
+## UPDATED ASTHMA YLL ## -------------------------------------------------------
+files_to_load <- list.files("data/UpdatedAsthma YLL Results20230802064257",
+pattern = "*.csv", full.names = T)
+ATHYLL2_list <- lapply(files_to_load, read.csv)
+
+# MUST USE THESE FILES
+
 ## Grand list ## --------------------------------------------------------------- 
 df_list <- c(CHDYLL_list, ATHYLL_list)
 asyll_list <- df_list[str_detect(names(df_list), "ASYLL")]
@@ -132,7 +159,7 @@ all_persons <- list(CHD = list(YLL = CHDYLL_list$CHD_YLL_Persons,
 ## Grand list 2 ## -------------------------------------------------------------
 
 all_persons2 <- list(CHD_ASYLL_Persons = ASYLL6y_list$CHD_ASYLL_Persons,
-                     Asthma_ASYLL_Persons = ATHYLL_list$Asthma_ASYLL_Persons,
+                     Asthma_ASYLL_Persons = ATHYLL2_list[[1]],
                      Asthma_ASYLD_Persons = ATHYLD_list$Asthma_ASYLD_Persons,
                      Asthma_prev_Persons = ATHYLD_list$Asthma_Prev_Persons)
 
