@@ -6,10 +6,10 @@ source("src/ms.R")
 
 ## -----------------------------------------------------------------------------
 
-for(j in 1:length(all_persons2)){
+for(j in 1:length(all_persons)){
 
 # specs
-sp <- unlist(str_split(names(all_persons2)[j], "_"))
+sp <- unlist(str_split(names(all_persons)[j], "_"))
 condition <- sp[1]
 metric <- sp[2]
 sex <- sp[3]
@@ -19,11 +19,11 @@ file_index <- paste0(condition, "_", sex, "_", metric)
 message("Condition: ", condition, "\nSex: ", sex, "\nMetric: ", metric)
   
 # select temporary dataset
-df_temp <- all_persons2[[j]] %>% 
+df_temp <- all_persons[[j]] %>% 
   mutate(cisize = upper - lower)
 
 # create map data list
-if(j %in% c(3,4)){
+if(j %in% c(4,5)){
 map_temp <- left_join(df_temp,map, by = c("lga_name16" = "LGA_NAM")) %>% 
   st_as_sf() %>%
   st_transform(4326) 

@@ -106,3 +106,102 @@ lay <- rbind(c(1,2,3),
              c(7,7,7))
 return(arrangeGrob(grobs = c(year_plt_list, list(base_legend)), layout_matrix  = lay))
 }
+
+## -----------------------------------------------------------------------------
+#' @param draws iterations by observations
+#' @param model model column content (as single character)
+#' @param metric metric column content (as single character)
+#' @param conf_level numeric for the confidence size of the interval (defaults to 0.95)
+#' @param other_data data.frame with other data to be column binded to result 
+# (NOTE: must be same dimensions and same order!)
+#' @param prefix character vector added to point, upper, lower, se and RSE columns (defaults to "")
+#' @param addDPP logical (defaults to false)
+#' @returns Dataset with posterior summaries including: 
+# median point estimates, credible intervals (HDI)
+# standard deviations and RSE
+# More arguments can be passed to the getDPP() function using `...` (e.g. null_value)
+getResultsData <- function(draws, 
+                           model = NULL, metric = NULL,
+                           prefix = "",
+                           conf_level = 0.95,
+                           other_data = NULL, addDPP = FALSE, ...){
+  
+  # sum_func <- function(x){
+  #   c(point = median(x, na.rm = T),
+  #     lower = unname(HDInterval::hdi(x, credMass = conf_level)[1]),
+  #     upper = unname(HDInterval::hdi(x, credMass = conf_level)[2]),
+  #     se = sd(x, na.rm = T))
+  # }
+  # bind_rows(pblapply(asplit(draws, 2), sum_func))
+  
+  if(!is.null(other_data)){
+    message(paste0("NOTE (not an error): Please check that the row order of ", deparse(substitute(other_data)), " matches that of the column order of ", deparse(substitute(draws))))
+    if(nrow(other_data) != ncol(draws))stop(paste0("The number of columns of ", deparse(substitute(draws)), " does NOT match the number of rows of ", deparse(substitute(other_data)), ". They must match!"))
+  }
+  
+  if(is.null(dim(draws))){
+    r <- data.frame(point = draws,
+                    lower = NA,
+                    upper = NA,
+                    se = NA) %>%
+      mutate(RSE = NA) %>%
+      setNames(paste0(prefix, names(.)))
+    r <- bind_cols(r, other_data)
+  }else{
+    # Get objects
+    message("Progress ... -> Point estimates...")
+    point_in = pbapply::pbapply(draws, 2, median, na.rm = T)
+    message("Progress ... -> Standard errors...")
+    se_in = pbapply::pbapply(draws, 2, sd, na.rm = T)
+    message("Progress ... -> Highest density intervals...")
+    hd_ints = pbapply::pbapply(draws, 2, HDInterval::hdi, credMass = conf_level)
+    if(addDPP){
+      DPP <- jf$getDPP(draws, ...)
+      r <- data.frame(point = point_in,
+                      #lower = apply(draws, 2, quantile, prob = 0.025, na.rm = T),
+                      lower = hd_ints[1,],
+                      #upper = apply(draws, 2, quantile, prob = 0.975, na.rm = T),
+                      upper = hd_ints[2,],
+                      se = se_in,
+                      EP = DPP$EP,
+                      compared_to_null = DPP$compared_to_null,
+                      DPP = DPP$DPP,
+                      DPPsig = DPP$DPP_sig) %>%
+        mutate(RSE = 100 * (se/point)) %>%
+        setNames(paste0(prefix, names(.)))
+      r <- bind_cols(r, other_data)
+    }else{
+      r <- data.frame(point = point_in,
+                      #lower = apply(draws, 2, quantile, prob = 0.025, na.rm = T),
+                      lower = hd_ints[1,],
+                      #upper = apply(draws, 2, quantile, prob = 0.975, na.rm = T),
+                      upper = hd_ints[2,],
+                      se = se_in) %>%
+        mutate(RSE = 100 * (se/point)) %>%
+        setNames(paste0(prefix, names(.)))
+      r <- bind_cols(r, other_data)
+    }
+  }
+  
+  # Add columns if given
+  if(!is.null(model) & !is.null(metric)){
+    r <- r %>% 
+      mutate(model = model,
+             metric = metric) %>% 
+      relocate(model, metric)
+  }
+  if(!is.null(model) & is.null(metric)){
+    r <- r %>% 
+      mutate(model = model) %>% 
+      relocate(model)
+  }
+  if(is.null(model) & !is.null(metric)){
+    r <- r %>% 
+      mutate(metric = metric) %>% 
+      relocate(metric)
+  }
+  
+  # return objects
+  rownames(r) <- NULL
+  return(r)
+}

@@ -2,6 +2,7 @@
 
 # mean EP across time, socioeconomic status and remoteness ---------------------
 
+## -----
 all_persons2$CHD_ASYLL_Persons %>% 
   left_join(.,seifa_ra, by = c("geography_no" = "LGA_Code")) %>% 
   group_by(IRSD_5, year, ra) %>% 
@@ -18,7 +19,10 @@ all_persons2$CHD_ASYLL_Persons %>%
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90),
         legend.position = "bottom")
+jsave(filename = "EPtemporal_CHD_ASYLL_Persons.png", 
+      base_folder = "plts", square = T)
 
+## -----
 all_persons2$Asthma_prev_Persons %>% 
   left_join(.,seifa_ra, by = c("lga_name16" = "LGA_Name")) %>% 
   group_by(IRSD_5, year, ra) %>% 
@@ -35,7 +39,10 @@ all_persons2$Asthma_prev_Persons %>%
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90),
         legend.position = "bottom")
+jsave(filename = "EPtemporal_Asthma_prev_Persons.png", 
+      base_folder = "plts", square = T)
 
+## -----
 all_persons2$Asthma_ASYLD_Persons %>% 
   left_join(.,seifa_ra, by = c("lga_name16" = "LGA_Name")) %>% 
   group_by(IRSD_5, year, ra) %>% 
@@ -52,7 +59,10 @@ all_persons2$Asthma_ASYLD_Persons %>%
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90),
         legend.position = "bottom")
+jsave(filename = "EPtemporal_Asthma_ASYLD_Persons.png", 
+      base_folder = "plts", square = T)
 
+## -----
 all_persons2$Asthma_ASYLL_Persons %>% 
   left_join(.,seifa_ra, by = c("geography_no" = "LGA_Code")) %>% 
   group_by(IRSD_5, year, ra) %>% 
@@ -69,3 +79,57 @@ all_persons2$Asthma_ASYLL_Persons %>%
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90),
         legend.position = "bottom")
+jsave(filename = "EPtemporal_Asthma_ASYLL_Persons.png", 
+      base_folder = "plts", square = T)
+
+## Temporal random effects ## --------------------------------------------------
+
+## -----
+temporal_vecs$Asthma_YLD %>% 
+  ggplot(aes(y = point, ymin = lower, ymax = upper,
+             x = as.character(2015:2020),
+             group = 1))+theme_bw()+
+  geom_errorbar(col = "grey")+
+  geom_line()+
+  geom_point()+
+  labs(y = "Temporal random effect",
+       x = "",
+       title = "WMrP")+
+  theme(axis.text.x = element_text(angle = 90))
+jsave(filename = "temporalRA_Asthma_YLD.png", 
+      base_folder = "plts", square = T)
+
+## -----
+temporal_vecs$aCHD_YLD %>% 
+  ggplot(aes(y = point, ymin = lower, ymax = upper,
+             x = as.character(2015:2020),
+             group = 1))+theme_bw()+
+  geom_errorbar(col = "grey")+
+  geom_line()+
+  geom_point()+
+  labs(y = "Temporal random effect",
+       x = "",
+       title = "SAYT model",
+       subtitle = "Acute CHD - YLD")+
+  theme(axis.text.x = element_text(angle = 90))
+jsave(filename = "temporalRA_aCHD_YLD.png", 
+      base_folder = "plts", square = T)
+
+## -----
+temporal_vecs$cCHD_YLD %>% 
+  ggplot(aes(y = point, ymin = lower, ymax = upper,
+             x = as.character(2015:2020),
+             group = 1))+theme_bw()+
+  geom_errorbar(col = "grey")+
+  geom_line()+
+  geom_point()+
+  labs(y = "Temporal random effect",
+       x = "",
+       title = "SAYT model",
+       subtitle = "Chronic CHD - YLD")+
+  theme(axis.text.x = element_text(angle = 90))
+jsave(filename = "temporalRA_cCHD_YLD.png", 
+      base_folder = "plts", square = T)
+
+## Temporal random effects ## --------------------------------------------------
+

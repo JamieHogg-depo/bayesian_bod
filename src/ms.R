@@ -142,12 +142,44 @@ ATHYLL2_list <- lapply(files_to_load, read.csv)
 
 # MUST USE THESE FILES
 
+## UPDATED ASTHMA YLD ## -------------------------------------------------------
+
+Asthma_ASYLD_Persons <- read_excel("data/WMrPST_results_LGA_ASYLD_converted_currast_MT_6yr.xlsx")
+
+# MUST USE THESE FILES - 0308
+
+## UPDATED CHD files ## --------------------------------------------------------
+
+files_to_load <- list.files("data/CHD",
+                            pattern = "*.csv", full.names = T)
+CHDYLD_list <- lapply(files_to_load, read.csv)
+names(CHDYLD_list) <- c("CHD_ASYLD",
+                        "CHD_ASYLD_non6",
+                        "CHD_YLD")
+
+# MUST USE THESE FILES - 0308
+
+## Temporal vectors ## ---------------------------------------------------------
+
+files_to_load <- list.files("data/Temporal(gamma) vectors20230803063611",
+                            pattern = "*.Rdata", full.names = T)
+loadRData <- function(fileName){
+  #loads an RData file, and returns it
+  load(fileName)
+  get(ls()[ls() != "fileName"])
+}
+temporal_vecs <- lapply(files_to_load, loadRData)
+names(temporal_vecs) <- c("Asthma_YLD", "aCHD_YLD", "cCHD_YLD")
+
+# convert to posterior summaries
+temporal_vecs <- lapply(temporal_vecs, getResultsData)
+
 ## Grand list ## --------------------------------------------------------------- 
 df_list <- c(CHDYLL_list, ATHYLL_list)
 asyll_list <- df_list[str_detect(names(df_list), "ASYLL")]
 yll_list <- df_list[str_detect(names(df_list), " YLL")]
 
-all_persons <- list(CHD = list(YLL = CHDYLL_list$CHD_YLL_Persons,
+all_persons_old <- list(CHD = list(YLL = CHDYLL_list$CHD_YLL_Persons,
                                ASYLL =ASYLL6y_list$CHD_ASYLL_Persons,
                                YLD = list(),
                                ASYLD = list()),
@@ -158,10 +190,13 @@ all_persons <- list(CHD = list(YLL = CHDYLL_list$CHD_YLL_Persons,
 
 ## Grand list 2 ## -------------------------------------------------------------
 
-all_persons2 <- list(CHD_ASYLL_Persons = ASYLL6y_list$CHD_ASYLL_Persons,
-                     Asthma_ASYLL_Persons = ATHYLL2_list[[1]],
-                     Asthma_ASYLD_Persons = ATHYLD_list$Asthma_ASYLD_Persons,
-                     Asthma_prev_Persons = ATHYLD_list$Asthma_Prev_Persons)
+all_persons <- list(CHD_ASYLL_Persons = ASYLL6y_list$CHD_ASYLL_Persons, # downloaded on 0707
+                    CHD_ASYLD_Persons = CHDYLD_list$CHD_ASYLD, # downloaded 0308
+                    Asthma_ASYLL_Persons = ATHYLL2_list[[1]], # downloaded 0208
+                    Asthma_ASYLD_Persons = Asthma_ASYLD_Persons, # downloaded on 0308
+                    Asthma_prev_Persons = ATHYLD_list$Asthma_Prev_Persons # downloaded on 0407
+                    )
+all_persons$CHD_ASYLD_Persons <- all_persons$CHD_ASYLD_Persons %>% rename(year = data_year)
 
 ## Other code ## ---------------------------------------------------------------
 
