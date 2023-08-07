@@ -24,13 +24,13 @@ all_persons$CHD_ASYLL_Persons %>%
        col = "Socioeconomic\nstatus (IRSD)")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90),
-        legend.position = "bottom")+
+        legend.position = "right")+
   scale_color_manual(breaks = c("1 - most\ndisadvantaged", "2 - 4",
                                "5 - least\ndisadvantaged"),
                     values = c('#e41a1c','#377eb8','#4daf4a'))+
   ylim(0,1)
 jsave(filename = "EPtemporal_CHD_ASYLL_Persons.png", 
-      base_folder = "plts/ForPaper", square = T)
+      base_folder = "plts/ForPaper", square = F)
 
 ## -----
 all_persons$Asthma_prev_Persons %>% 
@@ -54,13 +54,13 @@ all_persons$Asthma_prev_Persons %>%
        col = "Socioeconomic\nstatus")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90),
-        legend.position = "bottom")+
+        legend.position = "right")+
   scale_color_manual(breaks = c("1 - most\ndisadvantaged", "2 - 4",
                                 "5 - least\ndisadvantaged"),
                      values = c('#e41a1c','#377eb8','#4daf4a'))+
   ylim(0,1)
 jsave(filename = "EPtemporal_Asthma_prev_Persons.png", 
-      base_folder = "plts/ForPaper", square = T)
+      base_folder = "plts/ForPaper", square = F)
 
 ## -----
 all_persons$Asthma_ASYLD_Persons %>% 
@@ -84,13 +84,13 @@ all_persons$Asthma_ASYLD_Persons %>%
        col = "Socioeconomic\nstatus")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90),
-        legend.position = "bottom")+
+        legend.position = "right")+
   scale_color_manual(breaks = c("1 - most\ndisadvantaged", "2 - 4",
                                 "5 - least\ndisadvantaged"),
                      values = c('#e41a1c','#377eb8','#4daf4a'))+
   ylim(0,1)
 jsave(filename = "EPtemporal_Asthma_ASYLD_Persons.png", 
-      base_folder = "plts/ForPaper", square = T)
+      base_folder = "plts/ForPaper", square = F)
 
 ## -----
 all_persons$Asthma_ASYLL_Persons %>% 
@@ -114,13 +114,13 @@ all_persons$Asthma_ASYLL_Persons %>%
        col = "Socioeconomic\nstatus")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90),
-        legend.position = "bottom")+
+        legend.position = "right")+
   scale_color_manual(breaks = c("1 - most\ndisadvantaged", "2 - 4",
                                 "5 - least\ndisadvantaged"),
                      values = c('#e41a1c','#377eb8','#4daf4a'))+
   ylim(0,1)
 jsave(filename = "EPtemporal_Asthma_ASYLL_Persons.png", 
-      base_folder = "plts/ForPaper", square = T)
+      base_folder = "plts/ForPaper", square = F)
 
 ## Temporal random effects ## --------------------------------------------------
 
