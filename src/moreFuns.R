@@ -44,12 +44,18 @@ addBoxLabel <- function(i, color = "white", size = 0.5){
   )
 }
 
-createTimeMap <- function(map_temp, col_type){
+#' @name createTimeMap
+#' @param map_temp sf dataset
+#' @param col_type character for the color scale used by viridis
+#' @param cut_prob (defaults to 0.02) cuts the lower and upper
+#' quantiles 
+createTimeMap <- function(map_temp, col_type, cut_prob = 0.02){
+  
+  # range of posterior medians
+  lower_cut_prob = cut_prob/2
+  col_range <- unname(quantile(map_temp$point, probs = c(lower_cut_prob, 1-lower_cut_prob)))
   
 	for(t in 1:length(seq_years)){
-	  
-		# range of posterior medians
-		col_range <- range(map_temp$point)
 		  
 		# base map - no legend
 		base <- map_temp %>% 
@@ -61,7 +67,8 @@ createTimeMap <- function(map_temp, col_type){
 				   colour = "black", fill = NA, size = 0.2)+
 		   scale_fill_viridis_c(begin = 0, end = 1, 
 								direction = -1,
-								option = col_type, limits = col_range)+
+								option = col_type, limits = col_range,
+								oob = squish)+
 		   theme(legend.position = "none",
 				text = element_text(size = 10),
 				plot.title = element_text(margin = margin(0,0,2,0)),
@@ -105,6 +112,49 @@ lay <- rbind(c(1,2,3),
              c(4,5,6),
              c(7,7,7))
 return(arrangeGrob(grobs = c(year_plt_list, list(base_legend)), layout_matrix  = lay))
+}
+
+## -----------------------------------------------------------------------------
+#' @name createCaterpillarPlot
+#' @param map_temp sf dataset
+#' @param col_type character for the color scale used by viridis
+#' @param cut_prob (defaults to 0.02) cuts the lower and upper
+#' quantiles 
+createCaterpillarPlot <- function(map_temp, 
+                           col_type, 
+                           cut_prob = 0.02){
+  
+  # range of posterior medians
+  lower_cut_prob = cut_prob/2
+  col_range <- unname(quantile(map_temp$point, 
+                               probs = c(lower_cut_prob, 1-lower_cut_prob)))
+  
+  # create plot
+  map_temp %>% 
+    mutate(year = as.character(year)) %>% 
+    group_by(year) %>% 
+    mutate(ord_id = order(order(point))) %>% 
+    ungroup() %>% 
+    ggplot(aes(y = point, ymin = lower, ymax = upper,
+               x = ord_id,
+               col = point))+
+    theme_bw()+
+    geom_errorbar()+
+    geom_point()+
+    facet_wrap(.~year) +
+    scale_color_viridis_c(begin = 0, end = 1, 
+                          direction = -1,
+                          option = col_type, 
+                          limits = col_range,
+                          oob = squish)+
+    labs(y = metric,
+         x = "Ranked LGAs",
+         color = "")+
+    guides(fill = guide_colourbar(barwidth = 15, 
+                                  title.position = "top",
+                                  title.hjust = 0.5))+
+    theme(legend.position = "none")
+  
 }
 
 ## -----------------------------------------------------------------------------

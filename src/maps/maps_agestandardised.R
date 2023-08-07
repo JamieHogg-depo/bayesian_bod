@@ -40,19 +40,26 @@ seq_years <- unique(df_temp$year)
 ## Point estimates ## ----------------------------------------------------------
 
 if(metric == "ASYLL"){
-  full_inset_plt <- createTimeMap(map_temp, "E")
+  full_inset_plt <- createTimeMap(map_temp, "E", cut_prob = 0.04)
+  cat_plot <- createCaterpillarPlot(map_temp, "E", cut_prob = 0.04)
 }else if(metric == "ASYLD"){
-  full_inset_plt <- createTimeMap(map_temp, "B")
+  full_inset_plt <- createTimeMap(map_temp, "B", cut_prob = 0.04)
+  cat_plot <- createCaterpillarPlot(map_temp, "B", cut_prob = 0.04)
 }else{
-  full_inset_plt <- createTimeMap(map_temp, "D") # prevalence
+  full_inset_plt <- createTimeMap(map_temp, "D", cut_prob = 0.04) # prevalence
+  cat_plot <- createCaterpillarPlot(map_temp, "D", cut_prob = 0.04) # prevalence
 }
 jsave(plot = full_inset_plt, filename = paste0("map_", file_index, ".png"), 
+      base_folder = "plts/ForPaper", square = F)
+jsave(plot = cat_plot, filename = paste0("cat_", file_index, ".png"), 
       base_folder = "plts/ForPaper", square = F)
 
 ## Uncertainty ## --------------------------------------------------------------
 
 # Progress
 message("Width of interval")
+
+col_range <- unname(quantile(map_temp$cisize, probs = c(0.02, 0.98)))
 
 for(t in 1:length(seq_years)){
   
@@ -66,7 +73,9 @@ for(t in 1:length(seq_years)){
             colour = "black", fill = NA, size = 0.2)+
     scale_fill_viridis_c(begin = 0, end = 1, 
                          direction = -1,
-                         option = "D")+
+                         option = "D",
+                         limits = col_range,
+                         oob = squish)+
     theme(legend.position = "none",
           text = element_text(size = 10),
           plot.title = element_text(margin = margin(0,0,2,0)),
@@ -132,13 +141,13 @@ for(t in 1:length(seq_years)){
     geom_sf(data = wa_border, aes(geometry = geometry), 
             colour = "black", fill = NA, size = 0.2)+
     scale_fill_gradientn(colors = c("#008837", "#a6dba0", 
-                                    "white","white","white", 
+                                    "white","white", "white","white","white", 
                                     "#c2a5cf", "#7b3294"),
                          limits = c(-0.0000001,1.0000001),
                          #oob = squish,
                          #trans = "logit",
-                         breaks = c(0,0.2,0.25,0.5,0.75,0.8,1),
-                         labels = as.character(c(0,0.2,"",0.5,"",0.8,1)))+
+                         breaks = c(0,0.1,0.2,0.25,0.5,0.75,0.8,0.9,1),
+                         labels = as.character(c(0,"", 0.2,"", 0.5,"", 0.8, "",1)))+
     theme(legend.position = "none",
           text = element_text(size = 10),
           plot.title = element_text(margin = margin(0,0,2,0)),
