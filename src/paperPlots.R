@@ -3,84 +3,124 @@
 # mean EP across time, socioeconomic status and remoteness ---------------------
 
 ## -----
-all_persons2$CHD_ASYLL_Persons %>% 
+all_persons$CHD_ASYLL_Persons %>% 
   left_join(.,seifa_ra, by = c("geography_no" = "LGA_Code")) %>% 
+  mutate(IRSD_5 = case_when(
+    IRSD_5 == 1 ~ "1 - most\ndisadvantaged",
+    IRSD_5 %in% c(2,3,4) ~ "2 - 4",
+    IRSD_5 == 5 ~ "5 - least\ndisadvantaged"
+  )) %>% 
   group_by(IRSD_5, year, ra) %>% 
-  summarise(m_EP = mean(EP)) %>%
+  summarise(m_EP = median(EP)) %>%
   filter(!is.na(ra)) %>% 
   ggplot(aes(y = m_EP, x = year, col = IRSD_5, group = IRSD_5))+
+  geom_hline(yintercept = c(0.8,0.2),
+             linetype = "dotted")+
   geom_point()+
   geom_line()+
-  geom_hline(yintercept = 0.8)+
   facet_wrap(.~ra)+
-  labs(y = "Mean of exceedance probabilities",
+  labs(y = "Median of exceedance probabilities",
        x = "",
-       col = "Socioeconomic\nstatus")+
+       col = "Socioeconomic\nstatus (IRSD)")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90),
-        legend.position = "bottom")
+        legend.position = "bottom")+
+  scale_color_manual(breaks = c("1 - most\ndisadvantaged", "2 - 4",
+                               "5 - least\ndisadvantaged"),
+                    values = c('#e41a1c','#377eb8','#4daf4a'))+
+  ylim(0,1)
 jsave(filename = "EPtemporal_CHD_ASYLL_Persons.png", 
-      base_folder = "plts", square = T)
+      base_folder = "plts/ForPaper", square = T)
 
 ## -----
-all_persons2$Asthma_prev_Persons %>% 
+all_persons$Asthma_prev_Persons %>% 
   left_join(.,seifa_ra, by = c("lga_name16" = "LGA_Name")) %>% 
+  mutate(IRSD_5 = case_when(
+    IRSD_5 == 1 ~ "1 - most\ndisadvantaged",
+    IRSD_5 %in% c(2,3,4) ~ "2 - 4",
+    IRSD_5 == 5 ~ "5 - least\ndisadvantaged"
+  )) %>% 
   group_by(IRSD_5, year, ra) %>% 
-  summarise(m_EP = mean(EP)) %>%
+  summarise(m_EP = median(EP)) %>%
   filter(!is.na(ra)) %>%
   ggplot(aes(y = m_EP, x = year, col = IRSD_5, group = IRSD_5))+
+  geom_hline(yintercept = c(0.8,0.2),
+             linetype = "dotted")+
   geom_point()+
   geom_line()+
-  geom_hline(yintercept = 0.8)+
   facet_wrap(.~ra)+
-  labs(y = "Mean of exceedance probabilities",
+  labs(y = "Median of exceedance probabilities",
        x = "",
        col = "Socioeconomic\nstatus")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90),
-        legend.position = "bottom")
+        legend.position = "bottom")+
+  scale_color_manual(breaks = c("1 - most\ndisadvantaged", "2 - 4",
+                                "5 - least\ndisadvantaged"),
+                     values = c('#e41a1c','#377eb8','#4daf4a'))+
+  ylim(0,1)
 jsave(filename = "EPtemporal_Asthma_prev_Persons.png", 
-      base_folder = "plts", square = T)
+      base_folder = "plts/ForPaper", square = T)
 
 ## -----
-all_persons2$Asthma_ASYLD_Persons %>% 
+all_persons$Asthma_ASYLD_Persons %>% 
   left_join(.,seifa_ra, by = c("lga_name16" = "LGA_Name")) %>% 
+  mutate(IRSD_5 = case_when(
+    IRSD_5 == 1 ~ "1 - most\ndisadvantaged",
+    IRSD_5 %in% c(2,3,4) ~ "2 - 4",
+    IRSD_5 == 5 ~ "5 - least\ndisadvantaged"
+  )) %>% 
   group_by(IRSD_5, year, ra) %>% 
-  summarise(m_EP = mean(EP)) %>%
+  summarise(m_EP = median(EP)) %>%
   filter(!is.na(ra)) %>% 
   ggplot(aes(y = m_EP, x = year, col = IRSD_5, group = IRSD_5))+
+  geom_hline(yintercept = c(0.8,0.2),
+             linetype = "dotted")+
   geom_point()+
   geom_line()+
-  geom_hline(yintercept = 0.8)+
   facet_wrap(.~ra)+
-  labs(y = "Mean of exceedance probabilities",
+  labs(y = "Median of exceedance probabilities",
        x = "",
        col = "Socioeconomic\nstatus")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90),
-        legend.position = "bottom")
+        legend.position = "bottom")+
+  scale_color_manual(breaks = c("1 - most\ndisadvantaged", "2 - 4",
+                                "5 - least\ndisadvantaged"),
+                     values = c('#e41a1c','#377eb8','#4daf4a'))+
+  ylim(0,1)
 jsave(filename = "EPtemporal_Asthma_ASYLD_Persons.png", 
-      base_folder = "plts", square = T)
+      base_folder = "plts/ForPaper", square = T)
 
 ## -----
-all_persons2$Asthma_ASYLL_Persons %>% 
+all_persons$Asthma_ASYLL_Persons %>% 
   left_join(.,seifa_ra, by = c("geography_no" = "LGA_Code")) %>% 
+  mutate(IRSD_5 = case_when(
+    IRSD_5 == 1 ~ "1 - most\ndisadvantaged",
+    IRSD_5 %in% c(2,3,4) ~ "2 - 4",
+    IRSD_5 == 5 ~ "5 - least\ndisadvantaged"
+  )) %>% 
   group_by(IRSD_5, year, ra) %>% 
-  summarise(m_EP = mean(EP)) %>%
+  summarise(m_EP = median(EP)) %>%
   filter(!is.na(ra)) %>% 
   ggplot(aes(y = m_EP, x = year, col = IRSD_5, group = IRSD_5))+
+  geom_hline(yintercept = c(0.8,0.2),
+             linetype = "dotted")+
   geom_point()+
   geom_line()+
-  geom_hline(yintercept = 0.8)+
   facet_wrap(.~ra)+
-  labs(y = "Mean of exceedance probabilities",
+  labs(y = "Median of exceedance probabilities",
        x = "",
        col = "Socioeconomic\nstatus")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90),
-        legend.position = "bottom")
+        legend.position = "bottom")+
+  scale_color_manual(breaks = c("1 - most\ndisadvantaged", "2 - 4",
+                                "5 - least\ndisadvantaged"),
+                     values = c('#e41a1c','#377eb8','#4daf4a'))+
+  ylim(0,1)
 jsave(filename = "EPtemporal_Asthma_ASYLL_Persons.png", 
-      base_folder = "plts", square = T)
+      base_folder = "plts/ForPaper", square = T)
 
 ## Temporal random effects ## --------------------------------------------------
 
@@ -97,7 +137,7 @@ temporal_vecs$Asthma_YLD %>%
        title = "WMrP")+
   theme(axis.text.x = element_text(angle = 90))
 jsave(filename = "temporalRA_Asthma_YLD.png", 
-      base_folder = "plts", square = T)
+      base_folder = "plts/ForPaper", square = T)
 
 ## -----
 temporal_vecs$aCHD_YLD %>% 
@@ -113,7 +153,7 @@ temporal_vecs$aCHD_YLD %>%
        subtitle = "Acute CHD - YLD")+
   theme(axis.text.x = element_text(angle = 90))
 jsave(filename = "temporalRA_aCHD_YLD.png", 
-      base_folder = "plts", square = T)
+      base_folder = "plts/ForPaper", square = T)
 
 ## -----
 temporal_vecs$cCHD_YLD %>% 
@@ -129,7 +169,7 @@ temporal_vecs$cCHD_YLD %>%
        subtitle = "Chronic CHD - YLD")+
   theme(axis.text.x = element_text(angle = 90))
 jsave(filename = "temporalRA_cCHD_YLD.png", 
-      base_folder = "plts", square = T)
+      base_folder = "plts/ForPaper", square = T)
 
 ## Temporal random effects ## --------------------------------------------------
 
