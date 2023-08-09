@@ -33,6 +33,36 @@ jsave(filename = "EPtemporal_CHD_ASYLL_Persons.png",
       base_folder = "plts/ForPaper", square = F)
 
 ## -----
+all_persons$CHD_ASYLD_Persons %>% 
+  left_join(.,seifa_ra, by = c("geography_no" = "LGA_Code")) %>% 
+  mutate(IRSD_5 = case_when(
+    IRSD_5 == 1 ~ "1 - most\ndisadvantaged",
+    IRSD_5 %in% c(2,3,4) ~ "2 - 4",
+    IRSD_5 == 5 ~ "5 - least\ndisadvantaged"
+  )) %>% 
+  group_by(IRSD_5, year, ra) %>% 
+  summarise(m_EP = median(EP)) %>%
+  filter(!is.na(ra)) %>% 
+  ggplot(aes(y = m_EP, x = year, col = IRSD_5, group = IRSD_5))+
+  geom_hline(yintercept = c(0.8,0.2),
+             linetype = "dotted")+
+  geom_point()+
+  geom_line()+
+  facet_wrap(.~ra)+
+  labs(y = "Median of exceedance probabilities",
+       x = "",
+       col = "Socioeconomic\nstatus (IRSD)")+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 90),
+        legend.position = "right")+
+  scale_color_manual(breaks = c("1 - most\ndisadvantaged", "2 - 4",
+                                "5 - least\ndisadvantaged"),
+                     values = c('#e41a1c','#377eb8','#4daf4a'))+
+  ylim(0,1)
+jsave(filename = "EPtemporal_CHD_ASYLD_Persons.png", 
+      base_folder = "plts/ForPaper", square = F)
+
+## -----
 all_persons$Asthma_prev_Persons %>% 
   left_join(.,seifa_ra, by = c("lga_name16" = "LGA_Name")) %>% 
   mutate(IRSD_5 = case_when(
@@ -121,6 +151,8 @@ all_persons$Asthma_ASYLL_Persons %>%
   ylim(0,1)
 jsave(filename = "EPtemporal_Asthma_ASYLL_Persons.png", 
       base_folder = "plts/ForPaper", square = F)
+
+
 
 ## Temporal random effects ## --------------------------------------------------
 
