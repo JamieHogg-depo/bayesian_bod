@@ -2,16 +2,19 @@
 
 jsave <- function(filename, base_folder, 
                   plot = last_plot(), 
-                  square = T, square_size = 5000, 
-                  ratio = c(6,9)){
+                  square = T, 
+                  square_size = 5000, 
+                  scale = 1,
+                  ratio = c(6,9),
+                  dpi = 1000){
   if(square){
     ggsave(filename = filename,
            plot = plot,
            path = base_folder,
-           dpi = 1000,
+           dpi = dpi,
            width = square_size,
            height = square_size,
-           scale = 1,
+           scale = scale,
            units = "px")
   }else{
     total = square_size^2
@@ -20,10 +23,10 @@ jsave <- function(filename, base_folder,
     ggsave(filename = filename,
            plot = plot, 
            path = base_folder,
-           dpi = 1000,
+           dpi = dpi,
            width = round(b),
            height = round(a),
-           scale = 1,
+           scale = scale,
            units = "px")
   }
 }
@@ -70,7 +73,7 @@ createTimeMap <- function(map_temp, col_type, cut_prob = 0.02){
 								option = col_type, limits = col_range,
 								oob = squish)+
 		   theme(legend.position = "none",
-				text = element_text(size = 10),
+				text = element_text(size = 8),
 				plot.title = element_text(margin = margin(0,0,2,0)),
 				plot.margin = unit(c(1,1,1,1), "mm"))
 
@@ -100,7 +103,7 @@ createTimeMap <- function(map_temp, col_type, cut_prob = 0.02){
 					 c(1,1))
 		year_plt_list[[t]] = arrangeGrob(grobs = list(base_boxes, perth_inset), 
 										 layout_matrix  = lay,
-										 top = textGrob(seq_years[t],gp=gpar(fontsize=10)))
+										 top = textGrob(seq_years[t],gp=gpar(fontsize=8)))
 
 		# Progress 
 		message("---- Year: ", seq_years[t])
@@ -153,7 +156,8 @@ createCaterpillarPlot <- function(map_temp,
     guides(fill = guide_colourbar(barwidth = 15, 
                                   title.position = "top",
                                   title.hjust = 0.5))+
-    theme(legend.position = "none")
+    theme(legend.position = "none",
+          text = element_text(size = 8))
   
 }
 

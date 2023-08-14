@@ -50,9 +50,13 @@ if(metric == "ASYLL"){
   cat_plot <- createCaterpillarPlot(map_temp, "D", cut_prob = 0.04) # prevalence
 }
 jsave(plot = full_inset_plt, filename = paste0("map_", file_index, ".png"), 
-      base_folder = "plts/ForPaper", square = F)
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
 jsave(plot = cat_plot, filename = paste0("cat_", file_index, ".png"), 
-      base_folder = "plts/ForPaper", square = F)
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
 
 ## Uncertainty ## --------------------------------------------------------------
 
@@ -77,7 +81,7 @@ for(t in 1:length(seq_years)){
                          limits = col_range,
                          oob = squish)+
     theme(legend.position = "none",
-          text = element_text(size = 10),
+          text = element_text(size = 8),
           plot.title = element_text(margin = margin(0,0,2,0)),
           plot.margin = unit(c(1,1,1,1), "mm"))
   
@@ -107,7 +111,7 @@ for(t in 1:length(seq_years)){
                c(1,1))
   year_plt_list[[t]] = arrangeGrob(grobs = list(base_boxes, perth_inset), 
                                    layout_matrix  = lay,
-                                   top = textGrob(seq_years[t],gp=gpar(fontsize=10)))
+                                   top = textGrob(seq_years[t],gp=gpar(fontsize=8)))
   
   # Progress 
   message("---- Year: ", seq_years[t])
@@ -123,7 +127,9 @@ full_inset_plt <- arrangeGrob(grobs = c(year_plt_list, list(base_legend)),
                               layout_matrix  = lay)
 jsave(plot = full_inset_plt, 
       filename = paste0("mapcisize_", file_index, ".png"), 
-      base_folder = "plts/ForPaper", square = F)
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
 
 ## Exceedance probability ## ---------------------------------------------------
 
@@ -149,7 +155,7 @@ for(t in 1:length(seq_years)){
                          breaks = c(0,0.1,0.2,0.25,0.5,0.75,0.8,0.9,1),
                          labels = as.character(c(0,"", 0.2,"", 0.5,"", 0.8, "",1)))+
     theme(legend.position = "none",
-          text = element_text(size = 10),
+          text = element_text(size = 8),
           plot.title = element_text(margin = margin(0,0,2,0)),
           plot.margin = unit(c(1,1,1,1), "mm"))
   
@@ -179,7 +185,7 @@ for(t in 1:length(seq_years)){
                c(1,1))
   year_plt_list[[t]] = arrangeGrob(grobs = list(base_boxes, perth_inset), 
                                    layout_matrix  = lay,
-                                   top = textGrob(seq_years[t],gp=gpar(fontsize=10)))
+                                   top = textGrob(seq_years[t],gp=gpar(fontsize=8)))
   
   # Progress 
   message("---- Year: ", seq_years[t])
@@ -195,7 +201,9 @@ full_inset_plt<- arrangeGrob(grobs = c(year_plt_list, list(base_legend)), layout
 
 # Save 
 jsave(plot = full_inset_plt, filename = paste0("mapEP_", file_index, ".png"), 
-      base_folder = "plts/ForPaper", square = F)
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
 
 }
 

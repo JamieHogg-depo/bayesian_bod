@@ -24,13 +24,16 @@ all_persons$CHD_ASYLL_Persons %>%
        col = "Socioeconomic\nstatus (IRSD)")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90),
-        legend.position = "right")+
+        legend.position = "right",
+        text = element_text(size = 8))+
   scale_color_manual(breaks = c("1 - most\ndisadvantaged", "2 - 4",
                                "5 - least\ndisadvantaged"),
                     values = c('#e41a1c','#377eb8','#4daf4a'))+
   ylim(0,1)
 jsave(filename = "EPtemporal_CHD_ASYLL_Persons.png", 
-      base_folder = "plts/ForPaper", square = F)
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
 
 ## -----
 all_persons$CHD_ASYLD_Persons %>% 
@@ -54,13 +57,16 @@ all_persons$CHD_ASYLD_Persons %>%
        col = "Socioeconomic\nstatus (IRSD)")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90),
-        legend.position = "right")+
+        legend.position = "right",
+        text = element_text(size = 8))+
   scale_color_manual(breaks = c("1 - most\ndisadvantaged", "2 - 4",
                                 "5 - least\ndisadvantaged"),
                      values = c('#e41a1c','#377eb8','#4daf4a'))+
   ylim(0,1)
 jsave(filename = "EPtemporal_CHD_ASYLD_Persons.png", 
-      base_folder = "plts/ForPaper", square = F)
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
 
 ## -----
 all_persons$Asthma_prev_Persons %>% 
@@ -84,13 +90,16 @@ all_persons$Asthma_prev_Persons %>%
        col = "Socioeconomic\nstatus")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90),
-        legend.position = "right")+
+        legend.position = "right",
+        text = element_text(size = 8))+
   scale_color_manual(breaks = c("1 - most\ndisadvantaged", "2 - 4",
                                 "5 - least\ndisadvantaged"),
                      values = c('#e41a1c','#377eb8','#4daf4a'))+
   ylim(0,1)
 jsave(filename = "EPtemporal_Asthma_prev_Persons.png", 
-      base_folder = "plts/ForPaper", square = F)
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
 
 ## -----
 all_persons$Asthma_ASYLD_Persons %>% 
@@ -114,13 +123,16 @@ all_persons$Asthma_ASYLD_Persons %>%
        col = "Socioeconomic\nstatus")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90),
-        legend.position = "right")+
+        legend.position = "right",
+        text = element_text(size = 8))+
   scale_color_manual(breaks = c("1 - most\ndisadvantaged", "2 - 4",
                                 "5 - least\ndisadvantaged"),
                      values = c('#e41a1c','#377eb8','#4daf4a'))+
   ylim(0,1)
 jsave(filename = "EPtemporal_Asthma_ASYLD_Persons.png", 
-      base_folder = "plts/ForPaper", square = F)
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
 
 ## -----
 all_persons$Asthma_ASYLL_Persons %>% 
@@ -144,13 +156,16 @@ all_persons$Asthma_ASYLL_Persons %>%
        col = "Socioeconomic\nstatus")+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 90),
-        legend.position = "right")+
+        legend.position = "right",
+        text = element_text(size = 8))+
   scale_color_manual(breaks = c("1 - most\ndisadvantaged", "2 - 4",
                                 "5 - least\ndisadvantaged"),
                      values = c('#e41a1c','#377eb8','#4daf4a'))+
   ylim(0,1)
 jsave(filename = "EPtemporal_Asthma_ASYLL_Persons.png", 
-      base_folder = "plts/ForPaper", square = F)
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
 
 
 
@@ -166,10 +181,14 @@ temporal_vecs$Asthma_YLD %>%
   geom_point()+
   labs(y = "Temporal random effect",
        x = "",
-       title = "WMrP")+
-  theme(axis.text.x = element_text(angle = 90))
+       title = "WMrP",
+       subtitle = "Asthma - YLD")+
+  theme(axis.text.x = element_text(angle = 90),
+        text = element_text(size = 8))
 jsave(filename = "temporalRA_Asthma_YLD.png", 
-      base_folder = "plts/ForPaper", square = T)
+      base_folder = "plts/ForPaper", square = T,
+      square_size = 1200,
+      dpi = 300)
 
 ## -----
 temporal_vecs$aCHD_YLD %>% 
@@ -183,9 +202,12 @@ temporal_vecs$aCHD_YLD %>%
        x = "",
        title = "SAYT model",
        subtitle = "Acute CHD - YLD")+
-  theme(axis.text.x = element_text(angle = 90))
+  theme(axis.text.x = element_text(angle = 90),
+        text = element_text(size = 8))
 jsave(filename = "temporalRA_aCHD_YLD.png", 
-      base_folder = "plts/ForPaper", square = T)
+      base_folder = "plts/ForPaper", square = T,
+      square_size = 1200,
+      dpi = 300)
 
 ## -----
 temporal_vecs$cCHD_YLD %>% 
@@ -199,9 +221,49 @@ temporal_vecs$cCHD_YLD %>%
        x = "",
        title = "SAYT model",
        subtitle = "Chronic CHD - YLD")+
-  theme(axis.text.x = element_text(angle = 90))
+  theme(axis.text.x = element_text(angle = 90),
+        text = element_text(size = 8))
 jsave(filename = "temporalRA_cCHD_YLD.png", 
-      base_folder = "plts/ForPaper", square = T)
+      base_folder = "plts/ForPaper", square = T,
+      square_size = 1200,
+      dpi = 300)
 
-## Temporal random effects ## --------------------------------------------------
+## -----
+temporal_vecs$Asthma_YLL %>% 
+  ggplot(aes(y = point, ymin = lower, ymax = upper,
+             x = as.character(2015:2020),
+             group = 1))+theme_bw()+
+  geom_errorbar(col = "grey")+
+  geom_line()+
+  geom_point()+
+  labs(y = "Temporal random effect",
+       x = "",
+       title = "SAYT model",
+       subtitle = "Asthma - YLL")+
+  theme(axis.text.x = element_text(angle = 90),
+        text = element_text(size = 8))
+jsave(filename = "temporalRA_Asthma_YLL.png", 
+      base_folder = "plts/ForPaper", square = T,
+      square_size = 1200,
+      dpi = 300)
 
+## -----
+temporal_vecs$CHD_YLL %>% 
+  ggplot(aes(y = point, ymin = lower, ymax = upper,
+             x = as.character(2015:2020),
+             group = 1))+theme_bw()+
+  geom_errorbar(col = "grey")+
+  geom_line()+
+  geom_point()+
+  labs(y = "Temporal random effect",
+       x = "",
+       title = "SAYT model",
+       subtitle = "CHD - YLL")+
+  theme(axis.text.x = element_text(angle = 90),
+        text = element_text(size = 8))
+jsave(filename = "temporalRA_CHD_YLL.png", 
+      base_folder = "plts/ForPaper", square = T,
+      square_size = 1200,
+      dpi = 300)
+
+## END SCRIPT ## ---------------------------------------------------------------
