@@ -186,6 +186,13 @@ files1408 <- list(Asthma_YLL = loadRData("data/TemporalVectors YLL20230814034912
 # convert to posterior summaries
 temporal_vecs <- c(temporal_vecs, lapply(head(files1408,2), getResultsData))
 
+## Raw mortality and prevalence data - 1508 ## ---------------------------------
+
+
+rawfiles1508 <- list(Asthma_mort = read_csv("data/Rawmortality and prevalence data20230815035038/Asthma_Totalmasked_mort.csv"),
+                     CHD_mort = read_csv("data/Rawmortality and prevalence data20230815035038/CHD_Totalmasked_mort.csv"),
+                     Asthma_prev = read_csv("data/Rawmortality and prevalence data20230815035038/Raw prevalence CHD Total.csv"))
+
 ## Grand list - deprec ## ------------------------------------------------------
 df_list <- c(CHDYLL_list, ATHYLL_list)
 asyll_list <- df_list[str_detect(names(df_list), "ASYLL")]
