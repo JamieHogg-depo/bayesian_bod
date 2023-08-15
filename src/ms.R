@@ -192,9 +192,9 @@ asyll_list <- df_list[str_detect(names(df_list), "ASYLL")]
 yll_list <- df_list[str_detect(names(df_list), " YLL")]
 
 all_persons_old <- list(CHD = list(YLL = CHDYLL_list$CHD_YLL_Persons,
-                               ASYLL =ASYLL6y_list$CHD_ASYLL_Persons,
-                               YLD = list(),
-                               ASYLD = list()),
+                                   ASYLL =ASYLL6y_list$CHD_ASYLL_Persons,
+                                   YLD = list(),
+                                   ASYLD = list()),
                 Asthma = list(YLL = ATHYLL_list$Asthma_YLL_Persons,
                               ASYLL = ATHYLL_list$Asthma_ASYLL_Persons,
                               YLD = ATHYLD_list$Asthma_YLD_Persons,
