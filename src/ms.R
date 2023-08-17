@@ -188,10 +188,13 @@ temporal_vecs <- c(temporal_vecs, lapply(head(files1408,2), getResultsData))
 
 ## Raw mortality and prevalence data - 1508 ## ---------------------------------
 
-
 rawfiles1508 <- list(Asthma_mort = read_csv("data/Rawmortality and prevalence data20230815035038/Asthma_Totalmasked_mort.csv"),
                      CHD_mort = read_csv("data/Rawmortality and prevalence data20230815035038/CHD_Totalmasked_mort.csv"),
                      Asthma_prev = read_csv("data/Rawmortality and prevalence data20230815035038/Raw prevalence CHD Total.csv"))
+
+## Asthma prevalance - 1708 ## -------------------------------------------------
+
+asthma_prev_1708 <- read_excel("data/WMrPST_results_LGA_YLD_currast_6 year_prev.xlsx")
 
 ## Grand list - deprec ## ------------------------------------------------------
 df_list <- c(CHDYLL_list, ATHYLL_list)
@@ -213,9 +216,10 @@ all_persons <- list(CHD_ASYLL_Persons = files1408$CHD_ASYLL, # downloaded on 140
                     CHD_ASYLD_Persons = CHDYLD_list$CHD_ASYLD, # downloaded 0308
                     Asthma_ASYLL_Persons = files1408$Asthma_ASYLL, # downloaded 1408
                     Asthma_ASYLD_Persons = Asthma1408$Asthma_ASYLD, # downloaded on 1408
-                    Asthma_prev_Persons = ATHYLD_list$Asthma_Prev_Persons # downloaded on 0407
+                    Asthma_prev_Persons = asthma_prev_1708 # downloaded on 1708
                     )
 all_persons$CHD_ASYLD_Persons <- all_persons$CHD_ASYLD_Persons %>% rename(year = data_year)
+all_persons$Asthma_prev_Persons <- all_persons$Asthma_prev_Persons %>% setNames(str_remove(names(.), "mrp_"))
 
 ## Other code ## ---------------------------------------------------------------
 
