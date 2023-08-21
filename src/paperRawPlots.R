@@ -1,19 +1,34 @@
 ## paperRawPlots
 
-rawfiles1708 <- list(Asthma_ASYLL = read_csv("data/RawASYLL and ASYLDs20230817092950/Asthma_TotalRAW_FILE.csv"),
-                     CHD_ASYLD = read_csv("data/RawASYLL and ASYLDs20230817092950/CHD_Total_raw.csv"),
-                     CHD_ASYLL = read_csv("data/RawASYLL and ASYLDs20230817092950/CHD_TotalRAW_FILE.csv"))
-
 ## Asthma ASYLL ## -------------------------------------------------------------
 
 ## point estimates
 full_join(rawfiles1708$Asthma_ASYLL, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
+  left_join(.,pop,by = c("geography_no.x" = "LGA_Code")) %>% 
+  mutate(raw_lower = raw_ASYLL.x - 1.96 * raw_SE_ASYLL, 
+         raw_upper = raw_ASYLL.x + 1.96 * raw_SE_ASYLL) %>% 
+  group_by(year.x) %>% 
+  mutate(N_c = cut_number(N, n = 100, labels = FALSE)) %>% 
+  ungroup() %>% 
   ggplot(aes(y = point, ymin = lower, ymax = upper,
-             x = raw_ASYLL.x))+
-  geom_abline()+
+             x = raw_ASYLL.x, xmin = raw_lower, xmax = raw_upper,
+             col = N_c))+
+  theme_bw()+
   geom_errorbar(col = "grey")+
+  geom_errorbarh(col = "grey")+
   geom_point()+
-  xlim(0, 100)
+  geom_abline()+
+  xlim(0,1000)+ # drops 7 LGA by time points
+  labs(y = "Modelled ASYLL",
+       x = "Raw ASYLL",
+       color = "Population\n(percentiles)")+
+  scale_color_viridis_c()+
+  theme(legend.position = "bottom",
+        text = element_text(size = 8))
+jsave(filename = paste0("compraw_Asthma_ASYLL.png"), 
+      base_folder = "plts/ForPaper", square = T,
+      square_size = 1200,
+      dpi = 300)
 
 ## RSE summary
 rawfiles1708$Asthma_ASYLL %>% 
@@ -33,16 +48,29 @@ full_join(rawfiles1708$Asthma_ASYLL, all_persons$Asthma_ASYLL_Persons, by = c("T
 
 ## point estimates
 full_join(rawfiles1708$CHD_ASYLL, all_persons$CHD_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
+  left_join(.,pop,by = c("geography_no.x" = "LGA_Code")) %>% 
   mutate(raw_lower = raw_ASYLL.x - 1.96 * raw_SE_ASYLL, 
          raw_upper = raw_ASYLL.x + 1.96 * raw_SE_ASYLL) %>% 
+  group_by(year.x) %>% 
+  mutate(N_c = cut_number(N, n = 100, labels = FALSE)) %>% 
+  ungroup() %>% 
   ggplot(aes(y = point, ymin = lower, ymax = upper,
-             x = raw_ASYLL.x, xmin = raw_lower, xmax = raw_upper))+theme_bw()+
-  geom_abline()+
+             x = raw_ASYLL.x, xmin = raw_lower, xmax = raw_upper,
+             col = N_c))+theme_bw()+
   geom_errorbar(col = "grey")+
   geom_errorbarh(col = "grey")+
   geom_point()+
+  geom_abline()+
   labs(y = "Modelled ASYLL",
-       x = "Raw ASYLL")
+       x = "Raw ASYLL",
+       color = "Population\n(percentiles)")+
+  scale_color_viridis_c()+
+  theme(legend.position = "bottom",
+        text = element_text(size = 8))
+jsave(filename = paste0("compraw_CHD_ASYLL.png"), 
+      base_folder = "plts/ForPaper", square = T,
+      square_size = 1200,
+      dpi = 300)
 
 ## RSE summary
 rawfiles1708$CHD_ASYLL %>% 
@@ -61,21 +89,33 @@ full_join(rawfiles1708$CHD_ASYLL, all_persons$CHD_ASYLL_Persons, by = c("T_id", 
   labs(y = "RSE ASYLL",
        x = "")
 
-## CHD ASYLL ## ----------------------------------------------------------------
+## CHD ASYLD ## ----------------------------------------------------------------
 
 ## point estimates
 full_join(rawfiles1708$CHD_ASYLD, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
   mutate(raw_lower = raw_ASYLD - 1.96 * Raw_SE_ASYLD, 
          raw_upper = raw_ASYLD + 1.96 * Raw_SE_ASYLD) %>% 
   mutate(raw_lower = ifelse(raw_lower < 0, 0, raw_lower)) %>% 
+  group_by(year) %>% 
+  mutate(N_c = cut_number(N, n = 100, labels = FALSE)) %>% 
+  ungroup() %>% 
   ggplot(aes(y = point, ymin = lower, ymax = upper,
-             x = raw_ASYLD, xmin = raw_lower, xmax = raw_upper))+theme_bw()+
+             x = raw_ASYLD, xmin = raw_lower, xmax = raw_upper,
+             col = N_c))+
+  theme_bw()+
   geom_abline()+
   geom_errorbar(col = "grey")+
   geom_errorbarh(col = "grey")+
   geom_point()+
   labs(y = "Modelled ASYLD",
-       x = "Raw ASYLD")
+       x = "Raw ASYLD") +
+  scale_color_viridis_c()+
+  theme(legend.position = "bottom",
+        text = element_text(size = 8))
+jsave(filename = paste0("compraw_CHD_ASYLD.png"), 
+      base_folder = "plts/ForPaper", square = T,
+      square_size = 1200,
+      dpi = 300)
 
 ## RSE summary
 rawfiles1708$CHD_ASYLD %>% view()
