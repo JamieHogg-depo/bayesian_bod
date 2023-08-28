@@ -108,7 +108,8 @@ full_join(rawfiles1708$CHD_ASYLD, all_persons$CHD_ASYLD_Persons, by = c("T_id", 
   geom_errorbarh(col = "grey")+
   geom_point()+
   labs(y = "Modelled ASYLD",
-       x = "Raw ASYLD") +
+       x = "Raw ASYLD",
+       color = "Population\n(percentiles)") +
   scale_color_viridis_c()+
   theme(legend.position = "bottom",
         text = element_text(size = 8))

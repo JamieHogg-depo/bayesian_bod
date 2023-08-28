@@ -23,3 +23,122 @@ lapply(all_persons, foo)
 foo(all_persons$Asthma_prev_Persons, 4)
 
 all_persons$Asthma_prev_Persons
+
+## Comparison Tables ## --------------------------------------------------------
+
+comp_out <- list()
+
+## CHD_ASYLL
+comp_out[[1]] <- full_join(rawfiles1708$CHD_ASYLL, all_persons$CHD_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
+  left_join(.,pop,by = c("geography_no.x" = "LGA_Code")) %>% 
+  group_by(year.x) %>% 
+  mutate(N_c = cut_number(N, n = 5, labels = FALSE)) %>% 
+  ungroup() %>% 
+  filter(raw_ASYLL.x != 0) %>% 
+  mutate(r = raw_RSE_ASYLL/RSE) %>% 
+  group_by(N_c) %>% 
+  summarise(MAD = round(mean(abs(raw_ASYLL.x - point)),1),
+            rse_r = median(r, na.rm = T), 
+            rse_r_q25 = quantile(r, 0.25),
+            rse_r_q75 = quantile(r, 0.75),
+            n = n()) %>% 
+  mutate(condition = "CHD",
+         metric = "ASYLL") %>% 
+  relocate(condition, metric, n)
+
+## CHD ASYLD
+comp_out[[2]] <- full_join(rawfiles1708$CHD_ASYLD, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
+  group_by(year) %>% 
+  mutate(N_c = cut_number(N, n = 5, labels = FALSE)) %>% 
+  ungroup() %>% 
+  filter(raw_ASYLD != 0) %>% 
+  mutate(r = Raw_RSE_ASYLD/RSE) %>% 
+  group_by(N_c) %>% 
+  summarise(MAD = round(mean(abs(raw_ASYLD - point)),1),
+            rse_r = median(r, na.rm = T), 
+            rse_r_q25 = quantile(r, 0.25),
+            rse_r_q75 = quantile(r, 0.75),
+            n = n()) %>% 
+  mutate(condition = "CHD",
+         metric = "ASYLD") %>% 
+  relocate(condition, metric, n)
+
+## Asthma_ASYLL
+comp_out[[3]] <- full_join(rawfiles1708$Asthma_ASYLL, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
+  left_join(.,pop,by = c("geography_no.x" = "LGA_Code")) %>% 
+  group_by(year.x) %>% 
+  mutate(N_c = cut_number(N, n = 5, labels = FALSE)) %>% 
+  ungroup() %>% 
+  filter(raw_ASYLL.x != 0) %>% 
+  mutate(r = raw_RSE_ASYLL/RSE) %>% 
+  group_by(N_c) %>% 
+  summarise(MAD = round(mean(abs(raw_ASYLL.x - point)),1),
+            rse_r = median(r, na.rm = T), 
+            rse_r_q25 = quantile(r, 0.25),
+            rse_r_q75 = quantile(r, 0.75),
+            n = n()) %>% 
+  mutate(condition = "Asthma",
+         metric = "ASYLL") %>% 
+  relocate(condition, metric, n)
+
+## Create final table 
+bind_rows(comp_out) %>% 
+  mutate(rse_r = round(rse_r, 1),
+         rse_r_q25 = round(rse_r_q25, 1),
+         rse_r_q75 = round(rse_r_q75, 1),
+         out = paste0(rse_r, " (", rse_r_q25, ", ", rse_r_q75, ")")) %>% 
+  dplyr::select(-c(rse_r, rse_r_q25, rse_r_q75)) %>% 
+  #write.csv(., file = "tables/comp.csv") %>% 
+  knitr::kable(., "latex", booktabs = TRUE)
+
+## Summaries - modelled vs Raw ## ----------------------------------------------
+
+cut_off <- 50
+
+summ_out <- list()
+foo <- function(x, rr = 0){
+  m = round(median(x, na.rm = T), rr)
+  q = round(quantile(x, probs = c(0.05, 0.95), na.rm = T), rr)
+  paste0(m, " (", q[1], ", ", q[2], ")")
+}
+
+## CHD_ASYLL
+summ_out[[1]] <- full_join(rawfiles1708$CHD_ASYLL, all_persons$CHD_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
+  mutate(raw_RSE_ASYLL = ifelse(is.na(raw_RSE_ASYLL), 100, raw_RSE_ASYLL)) %>% 
+  summarise(mod_sum = foo(point),
+            mod_rse = 100*mean(RSE < cut_off),
+            raw_sum = foo(raw_ASYLL.x),
+            raw_rse = 100*mean(raw_RSE_ASYLL < cut_off, na.rm = T)) %>% 
+  mutate(condition = "CHD",
+         metric = "ASYLL") %>% 
+  relocate(condition, metric)
+
+## CHD ASYLD
+summ_out[[2]] <- full_join(rawfiles1708$CHD_ASYLD, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
+  mutate(Raw_RSE_ASYLD = ifelse(is.na(Raw_RSE_ASYLD), 100, Raw_RSE_ASYLD)) %>% 
+  summarise(mod_sum = foo(point),
+            mod_rse = 100*mean(RSE < cut_off),
+            raw_sum = foo(raw_ASYLD),
+            raw_rse = 100*mean(Raw_RSE_ASYLD < cut_off, na.rm = T)) %>% 
+  mutate(condition = "CHD",
+         metric = "ASYLD") %>% 
+  relocate(condition, metric)
+
+## Asthma_ASYLL
+summ_out[[3]] <- full_join(rawfiles1708$Asthma_ASYLL, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
+  mutate(raw_RSE_ASYLL = ifelse(is.na(raw_RSE_ASYLL), 100, raw_RSE_ASYLL)) %>% 
+  summarise(mod_sum = foo(point),
+            mod_rse = 100*mean(RSE < cut_off),
+            raw_sum = foo(raw_ASYLL.x),
+            raw_rse = 100*mean(raw_RSE_ASYLL < cut_off, na.rm = T)) %>% 
+  mutate(condition = "Asthma",
+         metric = "ASYLL") %>% 
+  relocate(condition, metric)
+
+## Create final table 
+bind_rows(summ_out) %>% 
+  mutate(mod_rse = round(mod_rse),
+         raw_rse = round(raw_rse)) %>% 
+  write.csv(., file = "tables/summ.csv")
+
+
