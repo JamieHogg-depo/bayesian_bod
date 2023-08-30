@@ -123,6 +123,29 @@ rawfiles1708 <- list(Asthma_ASYLL = read_csv("data/RawASYLL and ASYLDs2023081709
                      CHD_ASYLD = read_csv("data/RawASYLL and ASYLDs20230817092950/CHD_Total_raw.csv"),
                      CHD_ASYLL = read_csv("data/RawASYLL and ASYLDs20230817092950/CHD_TotalRAW_FILE.csv"))
 
+## Raw  Asthma prevalence 3008 ## ----------------------------------------------
+
+str_foo <- function(x){as.numeric(ifelse(x == ".", NA,x ))}
+load_foo <- function(x){
+  read_excel("data/Reportable Estimates for Asthma by LGA HWSS for Jamie.xlsx", sheet = x) %>% 
+    rename(lga_name16 = `LGA Name`) %>% 
+    mutate(raw = str_foo(Prevalence)/100,
+           raw_lower = str_foo(LCI)/100,
+           raw_upper = str_foo(UCI)/100,
+           raw_RSE = str_foo(RSE)*100,
+           year = x) %>% 
+    dplyr::select(year, lga_name16, raw, raw_lower, raw_upper, raw_RSE)
+}
+
+raw_asthma_3008 <- bind_rows(lapply(as.character(2015:2020), FUN = load_foo))
+rm(str_foo, load_foo)
+
+# Join concordance
+raw_asthma_3008 <- expand.grid(lga_name16 = lga$map$LGA_NAM,
+                               year = as.character(2015:2020)) %>% 
+  left_join(.,raw_asthma_3008) %>% 
+  mutate(year = as.numeric(year))
+
 ## New CHD - 1708 ## -----------------------------------------------------------
 
 CHD_ASYLD_1708 <- read_csv("data/CHDnew model results20230817093627/YLD_LGA_CHD_ALL_Total ASYLD count table 6year_POPCOR.csv")

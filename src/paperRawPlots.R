@@ -1,5 +1,29 @@
 ## paperRawPlots
 
+## Asthma Prevalence ## --------------------------------------------------------
+
+full_join(raw_asthma_3008, all_persons$Asthma_prev_Persons, by = c("lga_name16", "year")) %>% 
+  left_join(.,st_drop_geometry(lga$map) %>% dplyr::select(LGA_NAM, LGA_COD), by = c("lga_name16" = "LGA_NAM")) %>% 
+  mutate(LGA_COD = as.numeric(LGA_COD)) %>% 
+  left_join(.,pop,by = c("LGA_COD" = "LGA_Code")) %>% 
+  group_by(year) %>% 
+  mutate(N_c = cut_number(N, n = 100, labels = FALSE)) %>% 
+  ungroup() %>% 
+  ggplot(aes(y = point, ymin = lower, ymax = upper,
+             x = raw, xmin = raw_lower, xmax = raw_upper,
+             col = N_c))+
+  theme_bw()+
+  geom_errorbar(col = "grey")+
+  geom_errorbarh(col = "grey")+
+  geom_point()+
+  geom_abline()+
+  labs(y = "Modelled prevalence",
+       x = "Raw prevalence",
+       color = "Population\n(percentiles)")+
+  scale_color_viridis_c()+
+  theme(legend.position = "bottom",
+        text = element_text(size = 8))
+
 ## Asthma ASYLL ## -------------------------------------------------------------
 
 ## point estimates
