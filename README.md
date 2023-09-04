@@ -2,7 +2,7 @@
 
 This repository contains R code for the analyses described in the manuscript "Improving the resolution of burden of disease measures with Bayesian models: assessing feasibility for government health agencies with an application in Western Australia" by James Hogg, Kerry Staples, Alisha Davis, Susanna Cramb, Candice Patterson, Jianguo Xiao and Wendy Sun. 
 
-The modelled results are available in long-format in the dataset `ModelledEstimates.csv`. This dataset contains the following columns.
+The modelled results are available in long-format upon request. This dataset contains the following columns.
 
 - `condition`: Asthma or coronary heart disease
 - `metric`: Epidemiology metric
