@@ -161,6 +161,28 @@ all_persons <- list(CHD_ASYLL_Persons = files1408$CHD_ASYLL, # downloaded on 140
 all_persons$CHD_ASYLD_Persons <- all_persons$CHD_ASYLD_Persons %>% rename(year = data_year)
 all_persons$Asthma_prev_Persons <- all_persons$Asthma_prev_Persons %>% setNames(str_remove(names(.), "mrp_"))
 
+## Apply suppression ## --------------------------------------------------------
+
+raw <- list()
+
+# CHD_TotalRAW_FILE.csv
+raw$chd_asyll <- rawfiles1708$CHD_ASYLL %>% 
+  mutate(raw_count = as.numeric(ifelse(raw_count == "-", NA, raw_count)),
+         suppressed = (raw_count < 20 | is.na(raw_count) | N < 30)) %>% 
+  filter(!suppressed)
+
+# CHD_Total_raw.csv
+raw$chd_asyld <- rawfiles1708$CHD_ASYLD %>% 
+  mutate(raw_estimate = as.numeric(ifelse(raw_estimate == "-", NA, raw_estimate)),
+         suppressed = (raw_estimate < 20 | is.na(raw_estimate) | N < 30))%>% 
+  filter(!suppressed)
+
+# Asthma_TotalRAW_FILE.csv
+raw$asthma_asyll <- rawfiles1708$Asthma_ASYLL %>% 
+  mutate(raw_count = as.numeric(ifelse(raw_count == "-", NA, raw_count)),
+         suppressed = (raw_count < 20 | is.na(raw_count) | N < 30))%>% 
+  filter(!suppressed)
+
 ## Other code ## ---------------------------------------------------------------
 
 # City Insets 

@@ -29,10 +29,10 @@ all_persons$Asthma_prev_Persons
 comp_out <- list()
 
 ## CHD_ASYLL
-comp_out[[1]] <- full_join(rawfiles1708$CHD_ASYLL, all_persons$CHD_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
+comp_out[[1]] <- full_join(raw$chd_asyll, all_persons$CHD_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
   left_join(.,pop,by = c("geography_no.x" = "LGA_Code")) %>% 
   group_by(year.x) %>% 
-  mutate(N_c = cut_number(N, n = 5, labels = FALSE)) %>% 
+  mutate(N_c = cut_number(N.y, n = 5, labels = FALSE)) %>% 
   ungroup() %>% 
   filter(raw_ASYLL.x != 0) %>% 
   mutate(r = raw_RSE_ASYLL/RSE) %>% 
@@ -47,7 +47,7 @@ comp_out[[1]] <- full_join(rawfiles1708$CHD_ASYLL, all_persons$CHD_ASYLL_Persons
   relocate(condition, metric, n)
 
 ## CHD ASYLD
-comp_out[[2]] <- full_join(rawfiles1708$CHD_ASYLD, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
+comp_out[[2]] <- full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
   group_by(year) %>% 
   mutate(N_c = cut_number(N, n = 5, labels = FALSE)) %>% 
   ungroup() %>% 
@@ -64,10 +64,10 @@ comp_out[[2]] <- full_join(rawfiles1708$CHD_ASYLD, all_persons$CHD_ASYLD_Persons
   relocate(condition, metric, n)
 
 ## Asthma_ASYLL
-comp_out[[3]] <- full_join(rawfiles1708$Asthma_ASYLL, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
+comp_out[[3]] <- full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
   left_join(.,pop,by = c("geography_no.x" = "LGA_Code")) %>% 
   group_by(year.x) %>% 
-  mutate(N_c = cut_number(N, n = 5, labels = FALSE)) %>% 
+  mutate(N_c = cut_number(N.y, n = 5, labels = FALSE)) %>% 
   ungroup() %>% 
   filter(raw_ASYLL.x != 0) %>% 
   mutate(r = raw_RSE_ASYLL/RSE) %>% 
@@ -123,7 +123,7 @@ foo <- function(x, rr = 0){
 }
 
 ## CHD_ASYLL
-summ_out[[1]] <- full_join(rawfiles1708$CHD_ASYLL, all_persons$CHD_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
+summ_out[[1]] <- full_join(raw$chd_asyll, all_persons$CHD_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
   mutate(raw_RSE_ASYLL = ifelse(is.na(raw_RSE_ASYLL), 100, raw_RSE_ASYLL)) %>% 
   summarise(mod_sum = foo(point),
             mod_rse = 100*mean(RSE < cut_off),
@@ -134,7 +134,7 @@ summ_out[[1]] <- full_join(rawfiles1708$CHD_ASYLL, all_persons$CHD_ASYLL_Persons
   relocate(condition, metric)
 
 ## CHD ASYLD
-summ_out[[2]] <- full_join(rawfiles1708$CHD_ASYLD, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
+summ_out[[2]] <- full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
   mutate(Raw_RSE_ASYLD = ifelse(is.na(Raw_RSE_ASYLD), 100, Raw_RSE_ASYLD)) %>% 
   summarise(mod_sum = foo(point),
             mod_rse = 100*mean(RSE < cut_off),
@@ -145,7 +145,7 @@ summ_out[[2]] <- full_join(rawfiles1708$CHD_ASYLD, all_persons$CHD_ASYLD_Persons
   relocate(condition, metric)
 
 ## Asthma_ASYLL
-summ_out[[3]] <- full_join(rawfiles1708$Asthma_ASYLL, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
+summ_out[[3]] <- full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
   mutate(raw_RSE_ASYLL = ifelse(is.na(raw_RSE_ASYLL), 100, raw_RSE_ASYLL)) %>% 
   summarise(mod_sum = foo(point),
             mod_rse = 100*mean(RSE < cut_off),

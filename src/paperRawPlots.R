@@ -27,7 +27,7 @@ full_join(raw_asthma_3008, all_persons$Asthma_prev_Persons, by = c("lga_name16",
 ## Asthma ASYLL ## -------------------------------------------------------------
 
 ## point estimates
-full_join(rawfiles1708$Asthma_ASYLL, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
+full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
   left_join(.,pop,by = c("geography_no.x" = "LGA_Code")) %>% 
   mutate(raw_lower = raw_ASYLL.x - 1.96 * raw_SE_ASYLL, 
          raw_upper = raw_ASYLL.x + 1.96 * raw_SE_ASYLL) %>% 
@@ -55,13 +55,13 @@ jsave(filename = paste0("compraw_Asthma_ASYLL.png"),
       dpi = 300)
 
 ## RSE summary
-rawfiles1708$Asthma_ASYLL %>% 
+raw$asthma_asyll %>% 
   mutate(non_zero = raw_SE_ASYLL > 0) %>% 
   group_by(year) %>% 
   summarise(p = mean(non_zero))
 
 ## RSE
-full_join(rawfiles1708$Asthma_ASYLL, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
+full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
   dplyr::select(RSE, raw_RSE_ASYLL, M_id, T_id) %>%
   pivot_longer(-c(M_id, T_id)) %>% 
   ggplot(aes(y = value, col = name, x = M_id)) + 
@@ -71,7 +71,7 @@ full_join(rawfiles1708$Asthma_ASYLL, all_persons$Asthma_ASYLL_Persons, by = c("T
 ## CHD ASYLL ## ----------------------------------------------------------------
 
 ## point estimates
-full_join(rawfiles1708$CHD_ASYLL, all_persons$CHD_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
+full_join(raw$chd_asyll, all_persons$CHD_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
   left_join(.,pop,by = c("geography_no.x" = "LGA_Code")) %>% 
   mutate(raw_lower = raw_ASYLL.x - 1.96 * raw_SE_ASYLL, 
          raw_upper = raw_ASYLL.x + 1.96 * raw_SE_ASYLL) %>% 
@@ -97,14 +97,14 @@ jsave(filename = paste0("compraw_CHD_ASYLL.png"),
       dpi = 300)
 
 ## RSE summary
-rawfiles1708$CHD_ASYLL %>% 
+raw$chd_asyll %>% 
   mutate(non_zero = raw_SE_ASYLL > 0) %>% 
   group_by(year) %>% 
   summarise(p = mean(non_zero))
 # percent of non-zero ASYLL
 
 ## RSE
-full_join(rawfiles1708$CHD_ASYLL, all_persons$CHD_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
+full_join(raw$chd_asyll, all_persons$CHD_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
   dplyr::select(RSE, raw_RSE_ASYLL, M_id, year.x) %>%
   pivot_longer(-c(M_id, year.x)) %>% 
   ggplot(aes(y = value, col = name, x = M_id)) + 
@@ -116,7 +116,7 @@ full_join(rawfiles1708$CHD_ASYLL, all_persons$CHD_ASYLL_Persons, by = c("T_id", 
 ## CHD ASYLD ## ----------------------------------------------------------------
 
 ## point estimates
-full_join(rawfiles1708$CHD_ASYLD, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
+full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
   mutate(raw_lower = raw_ASYLD - 1.96 * Raw_SE_ASYLD, 
          raw_upper = raw_ASYLD + 1.96 * Raw_SE_ASYLD) %>% 
   mutate(raw_lower = ifelse(raw_lower < 0, 0, raw_lower)) %>% 
@@ -143,14 +143,14 @@ jsave(filename = paste0("compraw_CHD_ASYLD.png"),
       dpi = 300)
 
 ## RSE summary
-rawfiles1708$CHD_ASYLD %>% view()
+raw$chd_asyld %>% 
   mutate(non_zero = Raw_SE_ASYLD > 0) %>% 
   group_by(data_year) %>% 
   summarise(p = mean(non_zero))
 # percent of non-zero ASYLL
   
   ## RSE
-  full_join(rawfiles1708$CHD_ASYLD, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
+  full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
     dplyr::select(RSE, Raw_RSE_ASYLD, M_id, data_year) %>%
     pivot_longer(-c(M_id, data_year)) %>% 
     ggplot(aes(y = log(value), col = name, x = M_id)) + 
@@ -158,3 +158,5 @@ rawfiles1708$CHD_ASYLD %>% view()
     facet_wrap(.~data_year)+
     labs(y = "Log RSE ASYLD",
          x = "")
+
+## END SCRIPT ## ---------------------------------------------------------------

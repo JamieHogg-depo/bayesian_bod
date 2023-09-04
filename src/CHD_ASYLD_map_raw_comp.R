@@ -1,15 +1,16 @@
 
 
 # temp data
-map_temp <- full_join(rawfiles1708$CHD_ASYLD, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
+map_temp <- full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
   left_join(.,map, by = c("geography_no.x" = "ggrphy_")) %>% 
   st_as_sf() %>%
-  st_transform(4326) %>% 
-  mutate(raw_ASYLD = ifelse(Raw_RSE_ASYLD > 50, NA, raw_ASYLD),
-         point = ifelse(RSE > 50, NA, point))
+  st_transform(4326) #%>% 
+  #mutate(raw_ASYLD = ifelse(Raw_RSE_ASYLD > 50, NA, raw_ASYLD),
+         #point = ifelse(RSE > 50, NA, point))
 
 year_plt_list <- list()
 seq_years <- unique(map_temp$data_year)
+seq_years <- seq_years[!is.na(seq_years)]
 
 # range of posterior medians
 cut_prob = 0.04
