@@ -118,7 +118,7 @@ cut_off <- 50
 summ_out <- list()
 foo <- function(x, rr = 0){
   m = round(median(x, na.rm = T), rr)
-  q = round(quantile(x, probs = c(0.05, 0.95), na.rm = T), rr)
+  q = round(quantile(x, probs = c(0.25, 0.75), na.rm = T), rr)
   paste0(m, " (", q[1], ", ", q[2], ")")
 }
 
