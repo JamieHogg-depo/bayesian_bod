@@ -150,11 +150,15 @@ raw_asthma_3008 <- expand.grid(lga_name16 = lga$map$LGA_NAM,
 
 CHD_ASYLD_1708 <- read_csv("data/CHDnew model results20230817093627/YLD_LGA_CHD_ALL_Total ASYLD count table 6year_POPCOR.csv")
 
+## Updated Asthma YLL - 0709 ## ------------------------------------------------
+
+Asthma_ASYLL_0709 <- read_csv("data/Updatedasthma YLL data20230907021646/LGA_Asthma_Total ASYLL count table 6 year.csv")
+
 ## Grand list ## ---------------------------------------------------------------
 
 all_persons <- list(CHD_ASYLL_Persons = files1408$CHD_ASYLL, # downloaded on 1408
                     CHD_ASYLD_Persons = CHD_ASYLD_1708, # downloaded 1708
-                    Asthma_ASYLL_Persons = files1408$Asthma_ASYLL, # downloaded 1408
+                    Asthma_ASYLL_Persons = Asthma_ASYLL_0709, # downloaded 0709
                     Asthma_ASYLD_Persons = Asthma1408$Asthma_ASYLD, # downloaded on 1408
                     Asthma_prev_Persons = asthma_prev_1708 # downloaded on 1708
                     )
