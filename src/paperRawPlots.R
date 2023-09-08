@@ -29,8 +29,8 @@ full_join(raw_asthma_3008, all_persons$Asthma_prev_Persons, by = c("lga_name16",
 ## point estimates
 full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
   left_join(.,pop,by = c("geography_no.x" = "LGA_Code")) %>% 
-  mutate(raw_lower = raw_ASYLL.x - 1.96 * raw_SE_ASYLL, 
-         raw_upper = raw_ASYLL.x + 1.96 * raw_SE_ASYLL) %>% 
+  mutate(raw_lower = raw_ASYLL.x - 1.96 * raw_SE_ASYLL.x, 
+         raw_upper = raw_ASYLL.x + 1.96 * raw_SE_ASYLL.x) %>% 
   group_by(year.x) %>% 
   mutate(N_c = cut_number(N, n = 100, labels = FALSE)) %>% 
   ungroup() %>% 
