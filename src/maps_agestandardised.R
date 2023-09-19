@@ -23,7 +23,7 @@ df_temp <- all_persons[[j]] %>%
   mutate(cisize = upper - lower)
 
 # create map data list
-if(j %in% c(4,5)){
+if(j %in% c(5,6)){
 map_temp <- left_join(df_temp,map, by = c("lga_name16" = "LGA_NAM")) %>% 
   st_as_sf() %>%
   st_transform(4326) 

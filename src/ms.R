@@ -154,10 +154,18 @@ CHD_ASYLD_1708 <- read_csv("data/CHDnew model results20230817093627/YLD_LGA_CHD_
 
 Asthma_ASYLL_0709 <- read_csv("data/Updatedasthma YLL data20230907021646/LGA_Asthma_Total ASYLL count table 6 year.csv")
 
+## Updated CHD with three sequelae - 1809 ## -----------------------------------
+
+files_to_load <- list.files("data/CHDCombined Prevalence and new results including 20230918023258",
+                            pattern = "*.csv", full.names = T)
+CHD1809 <- lapply(files_to_load, read_csv)
+names(CHD1809) <- c("CHD_ASYLD", "CHD_prev", "CHD_YLD")
+
 ## Grand list ## ---------------------------------------------------------------
 
 all_persons <- list(CHD_ASYLL_Persons = files1408$CHD_ASYLL, # downloaded on 1408
-                    CHD_ASYLD_Persons = CHD_ASYLD_1708, # downloaded 1708
+                    CHD_ASYLD_Persons = CHD1809$CHD_ASYLD, # downloaded 1809
+                    CHD_prev_Persons = CHD1809$CHD_prev, # downloaded 1809
                     Asthma_ASYLL_Persons = Asthma_ASYLL_0709, # downloaded 0709
                     Asthma_ASYLD_Persons = Asthma1408$Asthma_ASYLD, # downloaded on 1408
                     Asthma_prev_Persons = asthma_prev_1708 # downloaded on 1708

@@ -158,5 +158,33 @@ raw$chd_asyld %>%
     facet_wrap(.~data_year)+
     labs(y = "Log RSE ASYLD",
          x = "")
+  
+## CHD prev ## -----------------------------------------------------------------
+
+## point estimates
+all_persons$CHD_prev_Persons %>% 
+  left_join(.,pop,by = c("geography_no" = "LGA_Code")) %>% 
+  mutate(raw_lower = raw_prev - 1.96 * 0.01, 
+         raw_upper = raw_prev + 1.96 * 0.01) %>% 
+  group_by(year) %>% 
+  mutate(N_c = cut_number(N.x, n = 100, labels = FALSE)) %>% 
+  ungroup() %>% 
+  ggplot(aes(y = point, ymin = lower, ymax = upper,
+             x = raw_prev, xmin = raw_lower, xmax = raw_upper,
+             col = N_c))+theme_bw()+
+  geom_errorbar(col = "grey")+
+  geom_errorbarh(col = "grey")+
+  geom_point()+
+  geom_abline()+
+  labs(y = "Modelled prevalence",
+       x = "Raw prevalence",
+       color = "Population\n(percentiles)")+
+  scale_color_viridis_c()+
+  theme(legend.position = "bottom",
+        text = element_text(size = 8))
+jsave(filename = paste0("compraw_CHD_prev.png"), 
+      base_folder = "plts/ForPaper", square = T,
+      square_size = 1200,
+      dpi = 300)
 
 ## END SCRIPT ## ---------------------------------------------------------------

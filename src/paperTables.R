@@ -59,6 +59,33 @@ summ_out[[2]] <- full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c(
          metric = "ASYLD") %>% 
   relocate(condition, metric)
 
+
+
+
+
+
+
+
+## CHD prev
+all_persons$CHD_prev_Persons %>% 
+  #mutate(Raw_RSE_ASYLD = ifelse(is.na(Raw_RSE_ASYLD), 100, Raw_RSE_ASYLD)) %>% 
+  summarise(mod_sum = foo(point, 2),
+            mod_rse = 100*mean(RSE < cut_off),
+            raw_sum = foo(raw_prev, 2),
+            #raw_rse = 100*mean(Raw_RSE_ASYLD < cut_off, na.rm = T),
+            MAD = round(mean(abs(raw_prev - point)), 2)) %>% 
+  mutate(condition = "CHD",
+         metric = "Prevalence") %>% 
+  relocate(condition, metric)
+
+
+
+
+
+
+
+
+
 ## Asthma_ASYLL
 summ_out[[3]] <- full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
   mutate(raw_RSE_ASYLL.x = ifelse(is.na(raw_RSE_ASYLL.x), 100, raw_RSE_ASYLL.x)) %>% 
@@ -126,6 +153,36 @@ comp_out[[2]] <- full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c(
   mutate(condition = "CHD",
          metric = "ASYLD") %>% 
   relocate(condition, metric, n)
+
+
+
+
+
+## CHD prev
+all_persons$CHD_prev_Persons %>% 
+  group_by(year) %>% 
+  mutate(N_c = cut_number(N, n = 5, labels = FALSE)) %>% 
+  ungroup() %>% 
+  #filter(Raw_RSE_ASYLD > 0) %>% 
+  #mutate(r = Raw_RSE_ASYLD/RSE) %>% 
+  group_by(N_c) %>% 
+  summarise(MAD = round(mean(abs(raw_prev - point)),2),
+            #rse_r = median(r, na.rm = T), 
+            #rse_r_q25 = quantile(r, 0.25),
+            #rse_r_q75 = quantile(r, 0.75),
+            n = n()) %>% 
+  mutate(condition = "CHD",
+         metric = "Prevalence") %>% 
+  relocate(condition, metric, n)
+
+
+
+
+
+
+
+
+
 
 ## Asthma_ASYLL
 comp_out[[3]] <- full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
