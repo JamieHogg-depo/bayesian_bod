@@ -161,6 +161,16 @@ files_to_load <- list.files("data/CHDCombined Prevalence and new results includi
 CHD1809 <- lapply(files_to_load, read_csv)
 names(CHD1809) <- c("CHD_ASYLD", "CHD_prev", "CHD_YLD")
 
+## Updated raw results for prevalence CHD - 1909 ## ----------------------------
+
+files_to_load <- list.files("data/RSEMethod and Results20230919042515",
+                            pattern = "*.csv", full.names = T)
+CHD1909_raw <- lapply(files_to_load, read_csv)
+names(CHD1909_raw) <- c("CHD_ASYLD", "CHD_prev")
+
+# Kerry has sent CHD ASYLL raw values again
+# Same values as those in rawfiles1708$CHD_ASYLL
+
 ## Grand list ## ---------------------------------------------------------------
 
 all_persons <- list(CHD_ASYLL_Persons = files1408$CHD_ASYLL, # downloaded on 1408
@@ -194,6 +204,9 @@ raw$asthma_asyll <- rawfiles1708$Asthma_ASYLL %>%
   mutate(raw_count = as.numeric(ifelse(raw_count == "-", NA, raw_count)),
          suppressed = (raw_count < 20 | is.na(raw_count) | N < 30)) #%>% 
   #filter(!suppressed)
+
+# Raw prevalence unmasked CHD LGA_Total_POPCOR.csv
+raw$chd_prev <- CHD1909_raw$CHD_prev
 
 ## Other code ## ---------------------------------------------------------------
 
