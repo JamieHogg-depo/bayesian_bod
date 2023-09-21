@@ -1,15 +1,15 @@
 
 
 # temp data
-map_temp <- full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
+map_temp <- full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id", "year")) %>% 
   left_join(.,map, by = c("geography_no.x" = "ggrphy_")) %>% 
   st_as_sf() %>%
   st_transform(4326) %>% 
-  mutate(raw_ASYLD = ifelse(Raw_RSE_ASYLD > 50, NA, raw_ASYLD),
+  mutate(raw_ASYLD = ifelse(raw_RSE > 50, NA, raw_ASYLD),
          point = ifelse(RSE > 50, NA, point))
 
 year_plt_list <- list()
-seq_years <- unique(map_temp$data_year)
+seq_years <- sort(unique(map_temp$year))
 seq_years <- seq_years[!is.na(seq_years)]
 
 # range of posterior medians
@@ -22,7 +22,7 @@ for(t in 1:length(seq_years)){
   
   # base map - no legend
   base <- map_temp %>% 
-    filter(data_year == seq_years[t]) %>% 
+    filter(year == seq_years[t]) %>% 
     ggplot(aes(fill = raw_ASYLD))+
     #ggplot(aes(fill = point))+
     theme_void()+

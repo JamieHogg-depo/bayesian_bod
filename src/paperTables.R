@@ -49,11 +49,11 @@ summ_out[[1]] <- full_join(raw$chd_asyll, all_persons$CHD_ASYLL_Persons, by = c(
 
 ## CHD ASYLD
 summ_out[[2]] <- full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
-  mutate(Raw_RSE_ASYLD = ifelse(is.na(Raw_RSE_ASYLD), 100, Raw_RSE_ASYLD)) %>% 
+  mutate(raw_RSE = ifelse(is.na(raw_RSE), 100, raw_RSE)) %>% 
   summarise(mod_sum = foo(point),
             mod_rse = 100*mean(RSE < cut_off),
             raw_sum = foo(raw_ASYLD),
-            raw_rse = 100*mean(Raw_RSE_ASYLD < cut_off, na.rm = T),
+            raw_rse = 100*mean(raw_RSE < cut_off, na.rm = T),
             MAD = round(mean(abs(raw_ASYLD - point)),1)) %>% 
   mutate(condition = "CHD",
          metric = "ASYLD") %>% 
@@ -133,12 +133,12 @@ comp_out[[1]] <- full_join(raw$chd_asyll, all_persons$CHD_ASYLL_Persons, by = c(
   relocate(condition, metric, n)
 
 ## CHD ASYLD
-comp_out[[2]] <- full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
+comp_out[[2]] <- full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id", "year")) %>% 
   group_by(year) %>% 
   mutate(N_c = cut_number(N, n = 5, labels = FALSE)) %>% 
   ungroup() %>% 
-  filter(Raw_RSE_ASYLD > 0) %>% 
-  mutate(r = Raw_RSE_ASYLD/RSE) %>% 
+  filter(raw_RSE > 0) %>% 
+  mutate(r = raw_RSE/RSE) %>% 
   group_by(N_c) %>% 
   summarise(MAD = round(mean(abs(raw_ASYLD - point)),1),
             rse_r = median(r, na.rm = T), 

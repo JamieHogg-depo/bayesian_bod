@@ -116,9 +116,9 @@ full_join(raw$chd_asyll, all_persons$CHD_ASYLL_Persons, by = c("T_id", "M_id")) 
 ## CHD ASYLD ## ----------------------------------------------------------------
 
 ## point estimates
-full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
-  mutate(raw_lower = raw_ASYLD - 1.96 * Raw_SE_ASYLD, 
-         raw_upper = raw_ASYLD + 1.96 * Raw_SE_ASYLD) %>% 
+full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id", "year")) %>% 
+  mutate(raw_lower = raw_ASYLD - 1.96 * raw_SE, 
+         raw_upper = raw_ASYLD + 1.96 * raw_SE) %>% 
   mutate(raw_lower = ifelse(raw_lower < 0, 0, raw_lower)) %>% 
   group_by(year) %>% 
   mutate(N_c = cut_number(N, n = 100, labels = FALSE)) %>% 

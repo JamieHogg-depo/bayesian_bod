@@ -171,6 +171,10 @@ names(CHD1909_raw) <- c("CHD_ASYLD", "CHD_prev")
 # Kerry has sent CHD ASYLL raw values again
 # Same values as those in rawfiles1708$CHD_ASYLL
 
+## Updated raw results for CHD ASYLD - 2109 ## ---------------------------------
+
+CHD2109 <- read.csv("data/20230921CHD_Total_raw_YLD.csv")
+
 ## Grand list ## ---------------------------------------------------------------
 
 all_persons <- list(CHD_ASYLL_Persons = files1408$CHD_ASYLL, # downloaded on 1408
@@ -193,8 +197,9 @@ raw$chd_asyll <- rawfiles1708$CHD_ASYLL %>%
          suppressed = (raw_count < 20 | is.na(raw_count) | N < 30)) #%>% 
   #filter(!suppressed)
 
-# CHD_Total_raw.csv
-raw$chd_asyld <- rawfiles1708$CHD_ASYLD %>% 
+# 20230921CHD_Total_raw_YLD.csv
+raw$chd_asyld <- CHD2109
+raw$chd_asyld2 <- rawfiles1708$CHD_ASYLD %>% 
   mutate(raw_estimate = as.numeric(ifelse(raw_estimate == "-", NA, raw_estimate)),
          suppressed = (raw_estimate < 20 | is.na(raw_estimate) | N < 30)) #%>% 
   #filter(!suppressed)
