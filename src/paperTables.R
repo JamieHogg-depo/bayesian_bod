@@ -29,9 +29,15 @@ all_persons$Asthma_prev_Persons
 cut_off <- 50
 
 summ_out <- list()
-foo <- function(x, rr = 0){
+foo2 <- function(x, rr = 0){
   m = round(median(x, na.rm = T), rr)
   q = round(quantile(x, probs = c(0.25, 0.75), na.rm = T), rr)
+  paste0(m, " (", q[1], ", ", q[2], ")")
+}
+foo <- function(x, rr = 0){
+  m = round(median(x, na.rm = T), rr)
+  q = round(c(min(x, na.rm = T),
+               max(x, na.rm = T)), rr)
   paste0(m, " (", q[1], ", ", q[2], ")")
 }
 
@@ -107,8 +113,13 @@ summ_out[[6]] <- full_join(raw_asthma_3008, all_persons$Asthma_prev_Persons, by 
 bind_rows(summ_out) %>% 
   mutate(mod_rse = round(mod_rse),
          raw_rse = round(raw_rse)) %>% 
-  dplyr::select(-c(mod_sum, raw_sum))
-  write.csv(., file = "tables/summ.csv")
+  dplyr::select(-MAD) %>% 
+  setNames(c("", "", "Median (min, max)", "Reliable (%)", "Median (min, max)", "Reliable (%)")) %>% 
+  knitr::kable(., "latex", booktabs = TRUE)
+
+
+  #dplyr::select(-c(mod_sum, raw_sum))
+  #write.csv(., file = "tables/summ.csv")
 
 ## Comparison Tables ## --------------------------------------------------------
 
