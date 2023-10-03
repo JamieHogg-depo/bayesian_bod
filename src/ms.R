@@ -213,6 +213,12 @@ raw$asthma_asyll <- rawfiles1708$Asthma_ASYLL %>%
 # Raw prevalence unmasked CHD LGA_Total_POPCOR.csv
 raw$chd_prev <- CHD1909_raw$CHD_prev
 
+## Modelled baseline results ## ------------------------------------------------
+
+# CHD_ASYLD_Total_ALL_modelled_comp - 20231003
+  # uses modelled state average for comparison
+CHDASYLD20231003 <- read.csv("data/CHD_ASYLD_Total_ALL_modelled_comp.csv")
+
 ## Other code ## ---------------------------------------------------------------
 
 # City Insets 

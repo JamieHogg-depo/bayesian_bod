@@ -69,6 +69,40 @@ jsave(filename = "EPtemporal_CHD_ASYLD_Persons.png",
       dpi = 300)
 
 ## -----
+CHD_ASYLD20231003 %>% 
+  cbind(.,dplyr::select(all_persons$CHD_ASYLD_Persons, year)) %>% 
+  left_join(.,seifa_ra, by = c("geography_no" = "LGA_Code")) %>% 
+  mutate(IRSD_5 = case_when(
+    IRSD_5 == 1 ~ "1 - most\ndisadvantaged",
+    IRSD_5 %in% c(2,3,4) ~ "2 - 4",
+    IRSD_5 == 5 ~ "5 - least\ndisadvantaged"
+  )) %>% 
+  group_by(IRSD_5, year, ra) %>% 
+  summarise(m_EP = median(EP)) %>%
+  filter(!is.na(ra)) %>% 
+  ggplot(aes(y = m_EP, x = year, col = IRSD_5, group = IRSD_5))+
+  geom_hline(yintercept = c(0.8,0.2),
+             linetype = "dotted")+
+  geom_point()+
+  geom_line()+
+  facet_wrap(.~ra)+
+  labs(y = "Median of exceedance probabilities",
+       x = "",
+       col = "Socioeconomic\nstatus (IRSD)")+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 90),
+        legend.position = "right",
+        text = element_text(size = 8))+
+  scale_color_manual(breaks = c("1 - most\ndisadvantaged", "2 - 4",
+                                "5 - least\ndisadvantaged"),
+                     values = c('#e41a1c','#377eb8','#4daf4a'))+
+  ylim(0,1)
+jsave(filename = "EPtemporal_CHD_ASYLD_Persons_mb.png", 
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
+
+## -----
 all_persons$CHD_prev_Persons %>% 
   left_join(.,seifa_ra, by = c("geography_no" = "LGA_Code")) %>% 
   mutate(IRSD_5 = case_when(

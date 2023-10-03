@@ -1,5 +1,52 @@
 ## paperRawPlots
 
+## ASYLL - both Asthma and CHD #### --------------------------------------------
+
+bind_rows(
+full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
+  left_join(.,pop,by = c("geography_no.x" = "LGA_Code")) %>% 
+  mutate(raw_lower = raw_ASYLL.x - 1.96 * raw_SE_ASYLL.x, 
+         raw_upper = raw_ASYLL.x + 1.96 * raw_SE_ASYLL.x) %>% 
+  group_by(year.x) %>% 
+  mutate(N_c = cut_number(N, n = 100, labels = FALSE)) %>% 
+  ungroup() %>% 
+  rename(raw = raw_ASYLL.x) %>% 
+  dplyr::select(point, lower, upper, raw, raw_lower, raw_upper, N_c) %>% 
+  mutate(model = "Asthma") %>% 
+  filter(raw_upper < 1000),
+
+full_join(raw$chd_asyll, all_persons$CHD_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
+  left_join(.,pop,by = c("geography_no.x" = "LGA_Code")) %>% 
+  mutate(raw_lower = raw_ASYLL.x - 1.96 * raw_SE_ASYLL, 
+         raw_upper = raw_ASYLL.x + 1.96 * raw_SE_ASYLL) %>% 
+  group_by(year.x) %>% 
+  mutate(N_c = cut_number(N, n = 100, labels = FALSE)) %>% 
+  ungroup()%>% 
+  rename(raw = raw_ASYLL.x) %>% 
+  dplyr::select(point, lower, upper, raw, raw_lower, raw_upper, N_c) %>% 
+  mutate(model = "CHD")
+) %>% 
+  ggplot(aes(y = point, ymin = lower, ymax = upper,
+             x = raw, xmin = raw_lower, xmax = raw_upper,
+             col = N_c))+
+  theme_bw()+
+  geom_errorbar(col = "grey")+
+  geom_errorbarh(col = "grey")+
+  geom_point()+
+  geom_abline()+
+  labs(y = "Modelled ASYLL",
+       x = "Raw ASYLL",
+       color = "Population\n(percentiles)")+
+  scale_color_viridis_c()+
+  theme(legend.position = "bottom",
+        text = element_text(size = 8))+
+  facet_wrap(.~model, scales = "free")
+jsave(filename = paste0("compraw_ASYLL.png"), 
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
+
+
 ## Asthma Prevalence ## --------------------------------------------------------
 
 full_join(raw_asthma_3008, all_persons$Asthma_prev_Persons, by = c("lga_name16", "year")) %>% 
@@ -23,6 +70,10 @@ full_join(raw_asthma_3008, all_persons$Asthma_prev_Persons, by = c("lga_name16",
   scale_color_viridis_c()+
   theme(legend.position = "bottom",
         text = element_text(size = 8))
+jsave(filename = paste0("compraw_Asthma_prev.png"), 
+      base_folder = "plts/ForPaper", square = T,
+      square_size = 1200,
+      dpi = 300)
 
 ## Asthma ASYLL ## -------------------------------------------------------------
 
