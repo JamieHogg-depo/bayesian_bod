@@ -235,7 +235,6 @@ jsave(filename = "EPtemporal_Asthma_ASYLL_Persons.png",
       dpi = 300)
 
 
-
 ## Temporal random effects ## --------------------------------------------------
 
 ## -----
@@ -329,6 +328,31 @@ temporal_vecs$CHD_YLL %>%
   theme(axis.text.x = element_text(angle = 90),
         text = element_text(size = 8))
 jsave(filename = "temporalRA_CHD_YLL.png", 
+      base_folder = "plts/ForPaper", square = T,
+      square_size = 1200,
+      dpi = 300)
+
+## Compare EPs - raw vs modelled #### ------------------------------------------
+
+CHDASYLD20231003 %>% 
+  rename(EP_m = EP) %>% 
+  cbind(.,dplyr::select(all_persons$CHD_ASYLD_Persons, EP)) %>% 
+  mutate(N_c = as.factor(cut_number(N, 5, labels = FALSE))) %>% 
+  ggplot(aes(y = EP_m, x = EP)) + #, col = N_c))+
+  theme_bw()+
+  geom_rect(xmin = 0.8, xmax = Inf, ymin = 0.8, ymax = Inf,  color = "lightgreen", fill = "lightgreen")+
+  geom_rect(xmin = -Inf, xmax = 0.2, ymin = -Inf, ymax = 0.2,  color = "lightgreen", fill = "lightgreen")+
+  geom_rect(xmin = 0.8, xmax = Inf, ymin = -Inf, ymax = 0.2,  color = "grey", fill = "grey")+
+  geom_rect(xmin = -Inf, xmax = 0.2, ymin = 0.8, ymax = Inf,  color = "grey", fill = "grey")+
+  geom_point()+
+  geom_hline(yintercept = c(0.8,0.2),
+             linetype = "dotted")+
+  geom_vline(xintercept = c(0.8,0.2),
+             linetype = "dotted")+
+  labs(y = "EP (using modelled baseline)",
+       x = "EP (using raw baseline)") #,
+       #col = "LGA Pop.\n(quantiles)")
+jsave(filename = "EPcomp_CHD_ASYLD.png", 
       base_folder = "plts/ForPaper", square = T,
       square_size = 1200,
       dpi = 300)
