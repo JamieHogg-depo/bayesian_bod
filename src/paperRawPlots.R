@@ -298,5 +298,20 @@ jsave(filename = paste0("compraw_ALL.png"),
       square_size = 1200,
       dpi = 300)
 
+## Compare CHD YLDS ## ---------------------------------------------------------
+
+CHD_YLD_0803 %>% 
+  ggplot(aes(y = point,
+             x = YLD))+
+  theme_bw()+
+  geom_point()+
+  theme(text = element_text(size = 8))+
+  geom_abline()+
+  labs(y = "YLDs (Bayesian)",
+       x = "YLDs (Raw)")
+jsave(filename = paste0("compraw_chdyld.png"), 
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
 
 ## END SCRIPT ## ---------------------------------------------------------------

@@ -187,6 +187,10 @@ all_persons <- list(CHD_ASYLL_Persons = files1408$CHD_ASYLL, # downloaded on 140
 all_persons$CHD_ASYLD_Persons <- all_persons$CHD_ASYLD_Persons %>% rename(year = data_year)
 all_persons$Asthma_prev_Persons <- all_persons$Asthma_prev_Persons %>% setNames(str_remove(names(.), "mrp_"))
 
+## CHD YLD ## ------------------------------------------------------------------
+
+CHD_YLD_0803 <- read_csv("data/CHD/YLD_LGA_CHD_ALL_Total yld count table.csv")
+
 ## Apply suppression ## --------------------------------------------------------
 
 raw <- list()
