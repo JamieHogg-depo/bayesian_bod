@@ -300,7 +300,7 @@ jsave(filename = paste0("compraw_ALL.png"),
 
 ## Compare CHD YLDS ## ---------------------------------------------------------
 
-CHD_YLD_0803 %>% 
+CHD_YLD_1016 %>% 
   ggplot(aes(y = point,
              x = YLD))+
   theme_bw()+

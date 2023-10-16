@@ -175,13 +175,17 @@ names(CHD1909_raw) <- c("CHD_ASYLD", "CHD_prev")
 
 CHD2109 <- read.csv("data/20230921CHD_Total_raw_YLD.csv")
 
+## Updated asthma ASYLD - 1610 ## ----------------------------------------------
+
+asthma_asyld_1610 <- read_excel("data/20231016_WMrPST_results_LGA_ASYLD_currast_MT_6yr.xlsx")
+
 ## Grand list ## ---------------------------------------------------------------
 
 all_persons <- list(CHD_ASYLL_Persons = files1408$CHD_ASYLL, # downloaded on 1408
                     CHD_ASYLD_Persons = CHD1809$CHD_ASYLD, # downloaded 1809
                     CHD_prev_Persons = CHD1809$CHD_prev, # downloaded 1809
                     Asthma_ASYLL_Persons = Asthma_ASYLL_0709, # downloaded 0709
-                    Asthma_ASYLD_Persons = Asthma1408$Asthma_ASYLD, # downloaded on 1408
+                    Asthma_ASYLD_Persons = asthma_asyld_1610, # downloaded 1610
                     Asthma_prev_Persons = asthma_prev_1708 # downloaded on 1708
                     )
 all_persons$CHD_ASYLD_Persons <- all_persons$CHD_ASYLD_Persons %>% rename(year = data_year)
@@ -189,7 +193,7 @@ all_persons$Asthma_prev_Persons <- all_persons$Asthma_prev_Persons %>% setNames(
 
 ## CHD YLD ## ------------------------------------------------------------------
 
-CHD_YLD_0803 <- read_csv("data/CHD/YLD_LGA_CHD_ALL_Total yld count table.csv")
+CHD_YLD_1016 <- read_csv("data/20231016_YLD_LGA_CHD_ALL_Total yld count table_POPCOR.csv")
 
 ## Apply suppression ## --------------------------------------------------------
 
