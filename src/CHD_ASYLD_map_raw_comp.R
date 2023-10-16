@@ -77,7 +77,7 @@ lay <- rbind(c(1,2,3),
              c(4,5,6),
              c(7,7,7))
 out_r <- arrangeGrob(grobs = c(year_plt_list, list(base_legend)), layout_matrix  = lay)
-jsave(plot = out_r, filename = paste0("map_CHD_Persons_ASYLD_raw.png"), 
+jsave(plot = out_r, filename = paste0("map_CHD_Persons_ASYLD_raw.jpeg"), 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
@@ -158,7 +158,7 @@ lay <- rbind(c(1,2,3),
              c(4,5,6),
              c(7,7,7))
 out_r <- arrangeGrob(grobs = c(year_plt_list, list(base_legend)), layout_matrix  = lay)
-jsave(plot = out_r, filename = paste0("map_CHD_Persons_ASYLD_raw_ALL.png"), 
+jsave(plot = out_r, filename = paste0("map_CHD_Persons_ASYLD_raw_ALL.jpeg"), 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)

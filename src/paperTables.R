@@ -223,7 +223,7 @@ bind_rows(comp_out) %>%
          rse_r_q75 = round(rse_r_q75, 1),
          out = paste0(rse_r, " (", rse_r_q25, ", ", rse_r_q75, ")")) %>% 
   dplyr::select(-c(rse_r, rse_r_q25, rse_r_q75)) %>% 
-  setNames(c("", "", "N (valid raw RSE)", "Population (quantiles)", "MAD", "RRSE")) %>% 
+  setNames(c("", "", "N (valid raw RSE)", "Population (quantiles)", "MAD", "RRSE")) %>%
   #write.csv(., file = "tables/comp.csv") %>% 
   knitr::kable(., "latex", booktabs = TRUE)
 

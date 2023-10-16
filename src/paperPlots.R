@@ -30,7 +30,7 @@ all_persons$CHD_ASYLL_Persons %>%
                                "5 - least\ndisadvantaged"),
                     values = c('#e41a1c','#377eb8','#4daf4a'))+
   ylim(0,1)
-jsave(filename = "EPtemporal_CHD_ASYLL_Persons.png", 
+jsave(filename = "EPtemporal_CHD_ASYLL_Persons.jpeg", 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
@@ -63,7 +63,7 @@ all_persons$CHD_ASYLD_Persons %>%
                                 "5 - least\ndisadvantaged"),
                      values = c('#e41a1c','#377eb8','#4daf4a'))+
   ylim(0,1)
-jsave(filename = "EPtemporal_CHD_ASYLD_Persons.png", 
+jsave(filename = "EPtemporal_CHD_ASYLD_Persons.jpeg", 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
@@ -97,7 +97,7 @@ CHD_ASYLD20231003 %>%
                                 "5 - least\ndisadvantaged"),
                      values = c('#e41a1c','#377eb8','#4daf4a'))+
   ylim(0,1)
-jsave(filename = "EPtemporal_CHD_ASYLD_Persons_mb.png", 
+jsave(filename = "EPtemporal_CHD_ASYLD_Persons_mb.jpeg", 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
@@ -130,7 +130,7 @@ all_persons$CHD_prev_Persons %>%
                                 "5 - least\ndisadvantaged"),
                      values = c('#e41a1c','#377eb8','#4daf4a'))+
   ylim(0,1)
-jsave(filename = "EPtemporal_CHD_prev_Persons.png", 
+jsave(filename = "EPtemporal_CHD_prev_Persons.jpeg", 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
@@ -163,7 +163,7 @@ all_persons$Asthma_prev_Persons %>%
                                 "5 - least\ndisadvantaged"),
                      values = c('#e41a1c','#377eb8','#4daf4a'))+
   ylim(0,1)
-jsave(filename = "EPtemporal_Asthma_prev_Persons.png", 
+jsave(filename = "EPtemporal_Asthma_prev_Persons.jpeg", 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
@@ -196,7 +196,7 @@ all_persons$Asthma_ASYLD_Persons %>%
                                 "5 - least\ndisadvantaged"),
                      values = c('#e41a1c','#377eb8','#4daf4a'))+
   ylim(0,1)
-jsave(filename = "EPtemporal_Asthma_ASYLD_Persons.png", 
+jsave(filename = "EPtemporal_Asthma_ASYLD_Persons.jpeg", 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
@@ -229,7 +229,7 @@ all_persons$Asthma_ASYLL_Persons %>%
                                 "5 - least\ndisadvantaged"),
                      values = c('#e41a1c','#377eb8','#4daf4a'))+
   ylim(0,1)
-jsave(filename = "EPtemporal_Asthma_ASYLL_Persons.png", 
+jsave(filename = "EPtemporal_Asthma_ASYLL_Persons.jpeg", 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
@@ -251,7 +251,7 @@ temporal_vecs$Asthma_YLD %>%
        subtitle = "Asthma - YLD")+
   theme(axis.text.x = element_text(angle = 90),
         text = element_text(size = 8))
-jsave(filename = "temporalRA_Asthma_YLD.png", 
+jsave(filename = "temporalRA_Asthma_YLD.jpeg", 
       base_folder = "plts/ForPaper", square = T,
       square_size = 1200,
       dpi = 300)
@@ -270,7 +270,7 @@ temporal_vecs$aCHD_YLD %>%
        subtitle = "Acute CHD - YLD")+
   theme(axis.text.x = element_text(angle = 90),
         text = element_text(size = 8))
-jsave(filename = "temporalRA_aCHD_YLD.png", 
+jsave(filename = "temporalRA_aCHD_YLD.jpeg", 
       base_folder = "plts/ForPaper", square = T,
       square_size = 1200,
       dpi = 300)
@@ -289,7 +289,7 @@ temporal_vecs$cCHD_YLD %>%
        subtitle = "Chronic CHD - YLD")+
   theme(axis.text.x = element_text(angle = 90),
         text = element_text(size = 8))
-jsave(filename = "temporalRA_cCHD_YLD.png", 
+jsave(filename = "temporalRA_cCHD_YLD.jpeg", 
       base_folder = "plts/ForPaper", square = T,
       square_size = 1200,
       dpi = 300)
@@ -308,7 +308,7 @@ temporal_vecs$Asthma_YLL %>%
        subtitle = "Asthma - YLL")+
   theme(axis.text.x = element_text(angle = 90),
         text = element_text(size = 8))
-jsave(filename = "temporalRA_Asthma_YLL.png", 
+jsave(filename = "temporalRA_Asthma_YLL.jpeg", 
       base_folder = "plts/ForPaper", square = T,
       square_size = 1200,
       dpi = 300)
@@ -327,7 +327,7 @@ temporal_vecs$CHD_YLL %>%
        subtitle = "CHD - YLL")+
   theme(axis.text.x = element_text(angle = 90),
         text = element_text(size = 8))
-jsave(filename = "temporalRA_CHD_YLL.png", 
+jsave(filename = "temporalRA_CHD_YLL.jpeg", 
       base_folder = "plts/ForPaper", square = T,
       square_size = 1200,
       dpi = 300)
@@ -352,7 +352,7 @@ CHDASYLD20231003 %>%
   labs(y = "EP (using modelled baseline)",
        x = "EP (using raw baseline)") #,
        #col = "LGA Pop.\n(quantiles)")
-jsave(filename = "EPcomp_CHD_ASYLD.png", 
+jsave(filename = "EPcomp_CHD_ASYLD.jpeg", 
       base_folder = "plts/ForPaper", square = T,
       square_size = 1200,
       dpi = 300)

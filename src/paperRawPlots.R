@@ -41,7 +41,7 @@ full_join(raw$chd_asyll, all_persons$CHD_ASYLL_Persons, by = c("T_id", "M_id")) 
   theme(legend.position = "bottom",
         text = element_text(size = 8))+
   facet_wrap(.~model, scales = "free")
-jsave(filename = paste0("compraw_ASYLL.png"), 
+jsave(filename = paste0("compraw_ASYLL.jpeg"), 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
@@ -70,7 +70,7 @@ full_join(raw_asthma_3008, all_persons$Asthma_prev_Persons, by = c("lga_name16",
   scale_color_viridis_c()+
   theme(legend.position = "bottom",
         text = element_text(size = 8))
-jsave(filename = paste0("compraw_Asthma_prev.png"), 
+jsave(filename = paste0("compraw_Asthma_prev.jpeg"), 
       base_folder = "plts/ForPaper", square = T,
       square_size = 1200,
       dpi = 300)
@@ -100,7 +100,7 @@ full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_
   scale_color_viridis_c()+
   theme(legend.position = "bottom",
         text = element_text(size = 8))
-jsave(filename = paste0("compraw_Asthma_ASYLL.png"), 
+jsave(filename = paste0("compraw_Asthma_ASYLL.jpeg"), 
       base_folder = "plts/ForPaper", square = T,
       square_size = 1200,
       dpi = 300)
@@ -142,7 +142,7 @@ full_join(raw$chd_asyll, all_persons$CHD_ASYLL_Persons, by = c("T_id", "M_id")) 
   scale_color_viridis_c()+
   theme(legend.position = "bottom",
         text = element_text(size = 8))
-jsave(filename = paste0("compraw_CHD_ASYLL.png"), 
+jsave(filename = paste0("compraw_CHD_ASYLL.jpeg"), 
       base_folder = "plts/ForPaper", square = T,
       square_size = 1200,
       dpi = 300)
@@ -188,7 +188,7 @@ full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id", "
   scale_color_viridis_c()+
   theme(legend.position = "bottom",
         text = element_text(size = 8))
-jsave(filename = paste0("compraw_CHD_ASYLD.png"), 
+jsave(filename = paste0("compraw_CHD_ASYLD.jpeg"), 
       base_folder = "plts/ForPaper", square = T,
       square_size = 1200,
       dpi = 300)
@@ -233,7 +233,7 @@ full_join(all_persons$CHD_prev_Persons, raw$chd_prev,
   scale_color_viridis_c()+
   theme(legend.position = "bottom",
         text = element_text(size = 8))
-jsave(filename = paste0("compraw_CHD_prev.png"), 
+jsave(filename = paste0("compraw_CHD_prev.jpeg"), 
       base_folder = "plts/ForPaper", square = T,
       square_size = 1200,
       dpi = 300)
@@ -293,7 +293,7 @@ bind_rows(
         text = element_text(size = 8))+
   labs(y = "Point estimates (log scale)",
        x = "")
-jsave(filename = paste0("compraw_ALL.png"), 
+jsave(filename = paste0("compraw_ALL.jpeg"), 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
@@ -309,7 +309,7 @@ CHD_YLD_1016 %>%
   geom_abline()+
   labs(y = "YLDs (Bayesian)",
        x = "YLDs (Raw)")
-jsave(filename = paste0("compraw_chdyld.png"), 
+jsave(filename = paste0("compraw_chdyld.jpeg"), 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)

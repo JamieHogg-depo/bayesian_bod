@@ -49,11 +49,11 @@ if(metric == "ASYLL"){
   full_inset_plt <- createTimeMap(map_temp, "D", cut_prob = 0.04) # prevalence
   cat_plot <- createCaterpillarPlot(map_temp, "D", cut_prob = 0.04) # prevalence
 }
-jsave(plot = full_inset_plt, filename = paste0("map_", file_index, ".png"), 
+jsave(plot = full_inset_plt, filename = paste0("map_", file_index, ".jpeg"), 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
-jsave(plot = cat_plot, filename = paste0("cat_", file_index, ".png"), 
+jsave(plot = cat_plot, filename = paste0("cat_", file_index, ".jpeg"), 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
@@ -126,7 +126,7 @@ lay <- rbind(c(1,2,3),
 full_inset_plt <- arrangeGrob(grobs = c(year_plt_list, list(base_legend)), 
                               layout_matrix  = lay)
 jsave(plot = full_inset_plt, 
-      filename = paste0("mapcisize_", file_index, ".png"), 
+      filename = paste0("mapcisize_", file_index, ".jpeg"), 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
@@ -200,7 +200,7 @@ lay <- rbind(c(1,2,3),
 full_inset_plt<- arrangeGrob(grobs = c(year_plt_list, list(base_legend)), layout_matrix  = lay)
 
 # Save 
-jsave(plot = full_inset_plt, filename = paste0("mapEP_", file_index, ".png"), 
+jsave(plot = full_inset_plt, filename = paste0("mapEP_", file_index, ".jpeg"), 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
@@ -281,7 +281,7 @@ lay <- rbind(c(1,2,3),
 full_inset_plt<- arrangeGrob(grobs = c(year_plt_list, list(base_legend)), layout_matrix  = lay)
 
 # Save 
-jsave(plot = full_inset_plt, filename = paste0("mapEP_CHD_Persons_ASYLD_mb.png"), 
+jsave(plot = full_inset_plt, filename = paste0("mapEP_CHD_Persons_ASYLD_mb.jpeg"), 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
