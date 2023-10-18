@@ -69,7 +69,7 @@ jsave(filename = "EPtemporal_CHD_ASYLD_Persons.jpeg",
       dpi = 300)
 
 ## -----
-CHD_ASYLD20231003 %>% 
+CHDASYLD20231003 %>% 
   cbind(.,dplyr::select(all_persons$CHD_ASYLD_Persons, year)) %>% 
   left_join(.,seifa_ra, by = c("geography_no" = "LGA_Code")) %>% 
   mutate(IRSD_5 = case_when(

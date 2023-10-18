@@ -2,11 +2,11 @@
 ## WITH SUPPRESSION ## ---------------------------------------------------------
 
 # temp data
-map_temp <- full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id", "year")) %>% 
-  left_join(.,map, by = c("geography_no.x" = "ggrphy_")) %>% 
+map_temp <- all_persons$CHD_ASYLD_Persons %>% 
+  left_join(.,map, by = c("geography_no" = "ggrphy_")) %>% 
   st_as_sf() %>%
   st_transform(4326) %>% 
-  mutate(raw_ASYLD = ifelse(raw_RSE > 50, NA, raw_ASYLD),
+  mutate(raw_ASYLD = ifelse(RSE_rawASYLD > 50, NA, ASYLD),
          point = ifelse(RSE > 50, NA, point))
 
 year_plt_list <- list()

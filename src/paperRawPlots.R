@@ -167,15 +167,16 @@ full_join(raw$chd_asyll, all_persons$CHD_ASYLL_Persons, by = c("T_id", "M_id")) 
 ## CHD ASYLD ## ----------------------------------------------------------------
 
 ## point estimates
-full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id", "year")) %>% 
-  mutate(raw_lower = raw_ASYLD - 1.96 * raw_SE, 
-         raw_upper = raw_ASYLD + 1.96 * raw_SE) %>% 
+all_persons$CHD_ASYLD_Persons %>% 
+  mutate(raw = ASYLD, 
+         raw_lower = raw - 1.96 * SE, 
+         raw_upper = raw + 1.96 * SE) %>% 
   mutate(raw_lower = ifelse(raw_lower < 0, 0, raw_lower)) %>% 
   group_by(year) %>% 
   mutate(N_c = cut_number(N, n = 100, labels = FALSE)) %>% 
   ungroup() %>% 
   ggplot(aes(y = point, ymin = lower, ymax = upper,
-             x = raw_ASYLD, xmin = raw_lower, xmax = raw_upper,
+             x = raw, xmin = raw_lower, xmax = raw_upper,
              col = N_c))+
   theme_bw()+
   geom_abline()+
@@ -194,34 +195,33 @@ jsave(filename = paste0("compraw_CHD_ASYLD.jpeg"),
       dpi = 300)
 
 ## RSE summary
-raw$chd_asyld %>% 
-  mutate(non_zero = Raw_SE_ASYLD > 0) %>% 
-  group_by(data_year) %>% 
+all_persons$CHD_ASYLD_Persons %>% 
+  mutate(non_zero = RSE_rawASYLD > 0) %>% 
+  group_by(year) %>% 
   summarise(p = mean(non_zero))
 # percent of non-zero ASYLL
   
   ## RSE
-  full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
-    dplyr::select(RSE, Raw_RSE_ASYLD, M_id, data_year) %>%
-    pivot_longer(-c(M_id, data_year)) %>% 
+all_persons$CHD_ASYLD_Persons %>% 
+    dplyr::select(RSE, RSE_rawASYLD, M_id, year) %>%
+    pivot_longer(-c(M_id, year)) %>% 
     ggplot(aes(y = log(value), col = name, x = M_id)) + 
     geom_point()+
-    facet_wrap(.~data_year)+
+    facet_wrap(.~year)+
     labs(y = "Log RSE ASYLD",
          x = "")
   
 ## CHD prev ## -----------------------------------------------------------------
 
 ## point estimates
-full_join(all_persons$CHD_prev_Persons, raw$chd_prev, 
-          by = c("geography_no", "MT_id", "year", "LGA_NAME16")) %>% 
-  mutate(raw_lower = raw_prev.y - 1.96 * SE, 
-         raw_upper = raw_prev.y + 1.96 * SE) %>% 
+all_persons$CHD_prev_Persons %>% 
+  mutate(raw_lower = raw_prev - 1.96 * SE, 
+         raw_upper = raw_prev + 1.96 * SE) %>% 
   group_by(year) %>% 
-  mutate(N_c = cut_number(N.x, n = 100, labels = FALSE)) %>% 
+  mutate(N_c = cut_number(N, n = 100, labels = FALSE)) %>% 
   ungroup() %>% 
   ggplot(aes(y = point, ymin = lower, ymax = upper,
-             x = raw_prev.y, xmin = raw_lower, xmax = raw_upper,
+             x = raw_prev, xmin = raw_lower, xmax = raw_upper,
              col = N_c))+theme_bw()+
   geom_errorbar(col = "grey")+
   geom_errorbarh(col = "grey")+
@@ -237,7 +237,7 @@ jsave(filename = paste0("compraw_CHD_prev.jpeg"),
       base_folder = "plts/ForPaper", square = T,
       square_size = 1200,
       dpi = 300)
-
+  
 ## Compare all - boxplots ## ---------------------------------------------------
 
 bind_rows(
@@ -248,8 +248,8 @@ bind_rows(
     mutate(condition = "CHD",
            metric = "ASYLL"),
   
-  full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
-    dplyr::select(raw_ASYLD, point) %>% 
+  all_persons$CHD_ASYLD_Persons %>% 
+    dplyr::select(ASYLD, point) %>% 
     setNames(c("Raw", "Bayesian")) %>% 
     pivot_longer(everything()) %>% 
     mutate(condition = "CHD",
@@ -300,7 +300,7 @@ jsave(filename = paste0("compraw_ALL.jpeg"),
 
 ## Compare CHD YLDS ## ---------------------------------------------------------
 
-CHD_YLD_1016 %>% 
+CHD1710$CHD_YLD %>% 
   ggplot(aes(y = point,
              x = YLD))+
   theme_bw()+

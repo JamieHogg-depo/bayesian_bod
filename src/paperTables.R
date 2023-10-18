@@ -1,29 +1,3 @@
-all_persons$CHD_ASYLL_Persons %>% 
-  left_join(.,seifa_ra, by = c("geography_no" = "LGA_Code")) %>% 
-  group_by(IRSD_5, ra, year) %>% 
-  summarise(ss = median(point),
-            .groups = "drop") %>% 
-  ggplot(aes(y= ss, x = year, col = IRSD_5))+
-  geom_point()+
-  facet_wrap(.~ra)
-
-lapply(all_persons, dim)
-
-foo <- function(x, rr = 0){
-x %>% 
-  summarise(m = round(median(point), rr),
-            p25 = round(quantile(point, prob = 0.25), rr),
-            p75 = round(quantile(point, prob = 0.75), rr),
-            below = round(100*mean(RSE < 50), rr)) %>% 
-  mutate(out = paste0(m, " (", p25, ", ", p75, ")")) %>% 
-  dplyr::select(out, below)
-}
-
-lapply(all_persons, foo)
-foo(all_persons$Asthma_prev_Persons, 4)
-
-all_persons$Asthma_prev_Persons
-
 ## Summaries - modelled vs Raw ## ----------------------------------------------
 
 cut_off <- 50
@@ -54,26 +28,25 @@ summ_out[[1]] <- full_join(raw$chd_asyll, all_persons$CHD_ASYLL_Persons, by = c(
   relocate(condition, metric)
 
 ## CHD ASYLD
-summ_out[[2]] <- full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id")) %>% 
-  mutate(raw_RSE = ifelse(is.na(raw_RSE), 100, raw_RSE)) %>% 
+summ_out[[2]] <- all_persons$CHD_ASYLD_Persons %>% 
+  mutate(raw_RSE = ifelse(is.na(RSE_rawASYLD), 100, RSE_rawASYLD)) %>% 
   summarise(mod_sum = foo(point),
             mod_rse = 100*mean(RSE < cut_off),
-            raw_sum = foo(raw_ASYLD),
+            raw_sum = foo(ASYLD),
             raw_rse = 100*mean(raw_RSE < cut_off, na.rm = T),
-            MAD = round(mean(abs(raw_ASYLD - point)),1)) %>% 
+            MAD = round(mean(abs(ASYLD - point)),1)) %>% 
   mutate(condition = "CHD",
          metric = "ASYLD") %>% 
   relocate(condition, metric)
 
 ## CHD prev
-summ_out[[3]] <- full_join(all_persons$CHD_prev_Persons, raw$chd_prev, 
-          by = c("geography_no", "MT_id", "year", "LGA_NAME16")) %>% 
-  mutate(raw_RSE = ifelse(is.na(RSE.y), 100, RSE.y)) %>% 
+summ_out[[3]] <- all_persons$CHD_prev_Persons %>% 
+  mutate(raw_RSE = ifelse(is.na(RSE_raw), 100, RSE_raw)) %>% 
   summarise(mod_sum = foo(point, 2),
-            mod_rse = 100*mean(RSE.x < cut_off),
-            raw_sum = foo(raw_prev.y, 2),
+            mod_rse = 100*mean(RSE < cut_off),
+            raw_sum = foo(raw_prev, 2),
             raw_rse = 100*mean(raw_RSE < cut_off, na.rm = T),
-            MAD = round(mean(abs(raw_prev.y - point)), 3)) %>% 
+            MAD = round(mean(abs(raw_prev - point)), 3)) %>% 
   mutate(condition = "CHD",
          metric = "Prevalence") %>% 
   relocate(condition, metric)
@@ -144,14 +117,14 @@ comp_out[[1]] <- full_join(raw$chd_asyll, all_persons$CHD_ASYLL_Persons, by = c(
   relocate(condition, metric, n)
 
 ## CHD ASYLD
-comp_out[[2]] <- full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c("T_id", "M_id", "year")) %>% 
+comp_out[[2]] <- all_persons$CHD_ASYLD_Persons %>% 
   group_by(year) %>% 
   mutate(N_c = cut_number(N, n = 5, labels = FALSE)) %>% 
   ungroup() %>% 
-  filter(raw_RSE > 0) %>% 
-  mutate(r = raw_RSE/RSE) %>% 
+  filter(RSE_rawASYLD > 0) %>% 
+  mutate(r = RSE_rawASYLD/RSE) %>% 
   group_by(N_c) %>% 
-  summarise(MAD = round(mean(abs(raw_ASYLD - point)),1),
+  summarise(MAD = round(mean(abs(ASYLD - point)),1),
             rse_r = median(r, na.rm = T), 
             rse_r_q25 = quantile(r, 0.25),
             rse_r_q75 = quantile(r, 0.75),
@@ -161,15 +134,14 @@ comp_out[[2]] <- full_join(raw$chd_asyld, all_persons$CHD_ASYLD_Persons, by = c(
   relocate(condition, metric, n)
 
 ## CHD prev
-comp_out[[3]] <- full_join(all_persons$CHD_prev_Persons, raw$chd_prev, 
-          by = c("geography_no", "MT_id", "year", "LGA_NAME16")) %>% 
+comp_out[[3]] <- all_persons$CHD_prev_Persons %>% 
   group_by(year) %>% 
-  mutate(N_c = cut_number(N.x, n = 5, labels = FALSE)) %>% 
+  mutate(N_c = cut_number(N, n = 5, labels = FALSE)) %>% 
   ungroup() %>% 
-  filter(RSE.y > 0) %>% 
-  mutate(r = RSE.y/RSE.x) %>% 
+  filter(RSE_raw > 0) %>% 
+  mutate(r = RSE_raw/RSE) %>% 
   group_by(N_c) %>% 
-  summarise(MAD = round(mean(abs(raw_prev.y - point)),3),
+  summarise(MAD = round(mean(abs(raw_prev - point)),3),
             rse_r = median(r, na.rm = T), 
             rse_r_q25 = quantile(r, 0.25),
             rse_r_q75 = quantile(r, 0.75),
