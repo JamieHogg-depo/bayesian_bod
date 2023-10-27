@@ -210,6 +210,33 @@ all_persons$CHD_ASYLD_Persons %>%
     facet_wrap(.~year)+
     labs(y = "Log RSE ASYLD",
          x = "")
+
+# Caterpillar plot comparison
+all_persons$CHD_ASYLD_Persons %>% 
+  mutate(raw_point = ASYLD, 
+         raw_lower = raw_point - 1.96 * SE, 
+         raw_upper = raw_point + 1.96 * SE) %>% 
+  mutate(raw_lower = ifelse(raw_lower < 0, 0, raw_lower)) %>% 
+  rename(mod_point = point,
+         mod_upper = upper,
+         mod_lower = lower,
+         mod_rse = RSE,
+         raw_rse = RSE_rawASYLD) %>% 
+  dplyr::select(contains(c("point", "upper", "lower", "rse"))) %>% 
+  mutate(x = order(order(mod_point))) %>% 
+  pivot_longer(-x) %>% 
+  separate(name, into = c("type", "measure")) %>% 
+  pivot_wider(values_from = value, names_from = measure) %>% 
+  ggplot(aes(y = point, ymin = lower, ymax = upper, 
+             x = x))+theme_bw()+
+  geom_errorbar(col = "grey")+
+  geom_point()+
+  facet_grid(type~., labeller = as_labeller(c("mod" = "Bayesian", "raw" = "Basic stratification")))+
+  labs(y = "ASYLD", x = "Ranked yearly LGAs")
+jsave(filename = paste0("compraw_cat_CHD_ASYLD.jpeg"), 
+      base_folder = "plts/ForPaper", square = T,
+      square_size = 1200,
+      dpi = 300)
   
 ## CHD prev ## -----------------------------------------------------------------
 

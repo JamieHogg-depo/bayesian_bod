@@ -35,6 +35,36 @@ jsave(filename = "EPtemporal_CHD_ASYLL_Persons.jpeg",
       square_size = 1200,
       dpi = 300)
 
+# Separate lines
+all_persons$CHD_ASYLL_Persons %>% 
+  left_join(.,seifa_ra, by = c("geography_no" = "LGA_Code")) %>% 
+  mutate(IRSD_5 = case_when(
+    IRSD_5 == 1 ~ "1 - most\ndisadvantaged",
+    IRSD_5 %in% c(2,3,4) ~ "2 - 4",
+    IRSD_5 == 5 ~ "5 - least\ndisadvantaged"
+  )) %>% 
+  ggplot(aes(y = EP, x = year, col = IRSD_5, group = M_id))+
+  geom_hline(yintercept = c(0.8,0.2),
+             linetype = "dotted")+
+  geom_point()+
+  geom_line()+
+  facet_wrap(.~ra)+
+  labs(y = "Exceedance probabilities",
+       x = "",
+       col = "Socioeconomic\nstatus (IRSD)")+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 90),
+        legend.position = "right",
+        text = element_text(size = 8))+
+  scale_color_manual(breaks = c("1 - most\ndisadvantaged", "2 - 4",
+                                "5 - least\ndisadvantaged"),
+                     values = c('#e41a1c','#377eb8','#4daf4a'))+
+  ylim(0,1)
+jsave(filename = "EPtemporal_sep_CHD_ASYLL_Persons.jpeg", 
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
+
 ## -----
 all_persons$CHD_ASYLD_Persons %>% 
   left_join(.,seifa_ra, by = c("geography_no" = "LGA_Code")) %>% 
