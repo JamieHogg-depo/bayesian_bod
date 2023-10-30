@@ -549,7 +549,7 @@ jsave(filename = "temporalRA_CHD_YLL.jpeg",
       square_size = 1200,
       dpi = 300)
 
-## Compare EPs - raw vs modelled #### ------------------------------------------
+## Compare EPs - raw vs modeled #### ------------------------------------------
 
 CHDASYLD20231003 %>% 
   rename(EP_m = EP) %>% 
@@ -566,7 +566,7 @@ CHDASYLD20231003 %>%
              linetype = "dotted")+
   geom_vline(xintercept = c(0.8,0.2),
              linetype = "dotted")+
-  labs(y = "EP (using modelled baseline)",
+  labs(y = "EP (using modeled baseline)",
        x = "EP (using raw baseline)") #,
        #col = "LGA Pop.\n(quantiles)")
 jsave(filename = "EPcomp_CHD_ASYLD.jpeg", 
