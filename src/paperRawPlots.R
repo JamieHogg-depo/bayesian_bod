@@ -222,17 +222,22 @@ all_persons$CHD_ASYLD_Persons %>%
          mod_lower = lower,
          mod_rse = RSE,
          raw_rse = RSE_rawASYLD) %>% 
-  dplyr::select(contains(c("point", "upper", "lower", "rse"))) %>% 
+  mutate(N_c = cut_number(N, n = 100, labels = FALSE)) %>% 
+  dplyr::select(N_c, contains(c("point", "upper", "lower", "rse"))) %>% 
   mutate(x = order(order(mod_point))) %>% 
-  pivot_longer(-x) %>% 
+  pivot_longer(-c(x, N_c)) %>% 
   separate(name, into = c("type", "measure")) %>% 
   pivot_wider(values_from = value, names_from = measure) %>% 
   ggplot(aes(y = point, ymin = lower, ymax = upper, 
              x = x))+theme_bw()+
   geom_errorbar(col = "grey")+
-  geom_point()+
+  geom_point(aes(col = N_c))+
   facet_grid(type~., labeller = as_labeller(c("mod" = "Bayesian", "raw" = "Basic stratification")))+
-  labs(y = "ASYLD", x = "Ranked yearly LGAs")
+  labs(y = "ASYLD", x = "Ranked yearly LGAs",
+       color = "Population\n(percentiles)") +
+  scale_color_viridis_c()+
+  theme(legend.position = "bottom",
+        text = element_text(size = 8))
 jsave(filename = paste0("compraw_cat_CHD_ASYLD.jpeg"), 
       base_folder = "plts/ForPaper", square = T,
       square_size = 1200,
