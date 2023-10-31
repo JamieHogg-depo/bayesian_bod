@@ -27,8 +27,20 @@ summ_out[[1]] <- full_join(raw$chd_asyll, all_persons$CHD_ASYLL_Persons, by = c(
          metric = "ASYLL") %>% 
   relocate(condition, metric)
 
+## CHD_Mort
+summ_out[[2]] <- mort3110$CHD_Mort %>% 
+  summarise(mod_sum = foo(1000*point, 2),
+            mod_rse = 100*mean(RSE < cut_off),
+            raw_sum = foo(1000*raw_prev, 2),
+            raw_rse = 100*mean(RSE_prev_raw < cut_off, na.rm = T),
+            MAD = round(mean(abs(1000*raw_prev - 1000*point)),3)) %>% 
+  mutate(condition = "CHD",
+         metric = "Mortality") %>% 
+  relocate(condition, metric) 
+  
+
 ## CHD ASYLD
-summ_out[[2]] <- all_persons$CHD_ASYLD_Persons %>% 
+summ_out[[3]] <- all_persons$CHD_ASYLD_Persons %>% 
   mutate(raw_RSE = ifelse(is.na(RSE_rawASYLD), 100, RSE_rawASYLD)) %>% 
   summarise(mod_sum = foo(point),
             mod_rse = 100*mean(RSE < cut_off),
@@ -40,7 +52,7 @@ summ_out[[2]] <- all_persons$CHD_ASYLD_Persons %>%
   relocate(condition, metric)
 
 ## CHD prev
-summ_out[[3]] <- all_persons$CHD_prev_Persons %>% 
+summ_out[[4]] <- all_persons$CHD_prev_Persons %>% 
   mutate(raw_RSE = ifelse(is.na(RSE_raw), 100, RSE_raw)) %>% 
   summarise(mod_sum = foo(point, 2),
             mod_rse = 100*mean(RSE < cut_off),
@@ -52,7 +64,7 @@ summ_out[[3]] <- all_persons$CHD_prev_Persons %>%
   relocate(condition, metric)
 
 ## Asthma_ASYLL
-summ_out[[4]] <- full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
+summ_out[[5]] <- full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
   mutate(raw_RSE_ASYLL.x = ifelse(is.na(raw_RSE_ASYLL.x), 100, raw_RSE_ASYLL.x)) %>% 
   summarise(mod_sum = foo(point),
             mod_rse = 100*mean(RSE < cut_off),
@@ -63,8 +75,19 @@ summ_out[[4]] <- full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, b
          metric = "ASYLL") %>% 
   relocate(condition, metric)
 
+## Asthma_Mort
+summ_out[[6]] <- mort3110$Asthma_Mort %>% 
+  summarise(mod_sum = foo(1000*point, 2),
+            mod_rse = 100*mean(RSE < cut_off),
+            raw_sum = foo(1000*raw_prev, 2),
+            raw_rse = 100*mean(RSE_prev_raw < cut_off, na.rm = T),
+            MAD = round(mean(abs(1000*raw_prev - 1000*point)),3)) %>% 
+  mutate(condition = "Asthma",
+         metric = "Mortality") %>% 
+  relocate(condition, metric) 
+
 ## Asthma ASYLD
-summ_out[[5]] <- all_persons$Asthma_ASYLD_Persons %>% 
+summ_out[[7]] <- all_persons$Asthma_ASYLD_Persons %>% 
   summarise(mod_sum = foo(point),
             mod_rse = 100*mean(RSE < cut_off)) %>% 
   mutate(condition = "Asthma",
@@ -72,7 +95,7 @@ summ_out[[5]] <- all_persons$Asthma_ASYLD_Persons %>%
   relocate(condition, metric)
 
 ## Asthma Prevalence
-summ_out[[6]] <- full_join(raw_asthma_3008, all_persons$Asthma_prev_Persons, by = c("lga_name16", "year")) %>% 
+summ_out[[8]] <- full_join(raw_asthma_3008, all_persons$Asthma_prev_Persons, by = c("lga_name16", "year")) %>% 
   mutate(raw_RSE = ifelse(is.na(raw_RSE), 100, raw_RSE)) %>% 
   summarise(mod_sum = foo(point, 2),
             mod_rse = 100*mean(RSE < cut_off, na.rm = T),
@@ -116,8 +139,26 @@ comp_out[[1]] <- full_join(raw$chd_asyll, all_persons$CHD_ASYLL_Persons, by = c(
          metric = "ASYLL") %>% 
   relocate(condition, metric, n)
 
+## CHD_Mort
+comp_out[[2]] <- mort3110$CHD_Mort %>% 
+  left_join(.,pop,by = c("geography_no" = "LGA_Code")) %>% 
+  group_by(T_id) %>% 
+  mutate(N_c = cut_number(N, n = 5, labels = FALSE)) %>% 
+  ungroup() %>% 
+  filter(RSE_prev_raw > 0) %>% 
+  mutate(r = RSE_prev_raw/RSE) %>% 
+  group_by(N_c) %>% 
+  summarise(MAD = round(mean(abs(1000*raw_prev - 1000*point)),3),
+            rse_r = median(r, na.rm = T), 
+            rse_r_q25 = quantile(r, 0.25, na.rm = T),
+            rse_r_q75 = quantile(r, 0.75, na.rm = T),
+            n = n()) %>% 
+  mutate(condition = "CHD",
+         metric = "Mortality") %>% 
+  relocate(condition, metric, n)
+
 ## CHD ASYLD
-comp_out[[2]] <- all_persons$CHD_ASYLD_Persons %>% 
+comp_out[[3]] <- all_persons$CHD_ASYLD_Persons %>% 
   group_by(year) %>% 
   mutate(N_c = cut_number(N, n = 5, labels = FALSE)) %>% 
   ungroup() %>% 
@@ -134,7 +175,7 @@ comp_out[[2]] <- all_persons$CHD_ASYLD_Persons %>%
   relocate(condition, metric, n)
 
 ## CHD prev
-comp_out[[3]] <- all_persons$CHD_prev_Persons %>% 
+comp_out[[4]] <- all_persons$CHD_prev_Persons %>% 
   group_by(year) %>% 
   mutate(N_c = cut_number(N, n = 5, labels = FALSE)) %>% 
   ungroup() %>% 
@@ -151,7 +192,7 @@ comp_out[[3]] <- all_persons$CHD_prev_Persons %>%
   relocate(condition, metric, n)
 
 ## Asthma_ASYLL
-comp_out[[4]] <- full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
+comp_out[[5]] <- full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
   left_join(.,pop,by = c("geography_no.x" = "LGA_Code")) %>% 
   group_by(year.x) %>% 
   mutate(N_c = cut_number(N.y, n = 5, labels = FALSE)) %>% 
@@ -168,8 +209,26 @@ comp_out[[4]] <- full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, b
          metric = "ASYLL") %>% 
   relocate(condition, metric, n)
 
+## CHD_Mort
+comp_out[[6]] <- mort3110$Asthma_Mort %>% 
+  left_join(.,pop,by = c("geography_no" = "LGA_Code")) %>% 
+  group_by(year) %>% 
+  mutate(N_c = cut_number(N, n = 5, labels = FALSE)) %>% 
+  ungroup() %>% 
+  filter(RSE_prev_raw > 0) %>% 
+  mutate(r = RSE_prev_raw/RSE) %>% 
+  group_by(N_c) %>% 
+  summarise(MAD = round(mean(abs(1000*raw_prev - 1000*point)),3),
+            rse_r = median(r, na.rm = T), 
+            rse_r_q25 = quantile(r, 0.25, na.rm = T),
+            rse_r_q75 = quantile(r, 0.75, na.rm = T),
+            n = n()) %>% 
+  mutate(condition = "Asthma",
+         metric = "Mortality") %>% 
+  relocate(condition, metric, n)
+
 ## Asthma Prevalence
-comp_out[[5]] <- full_join(raw_asthma_3008, all_persons$Asthma_prev_Persons, by = c("lga_name16", "year")) %>% 
+comp_out[[7]] <- full_join(raw_asthma_3008, all_persons$Asthma_prev_Persons, by = c("lga_name16", "year")) %>% 
   left_join(.,st_drop_geometry(lga$map) %>% dplyr::select(LGA_NAM, LGA_COD), by = c("lga_name16" = "LGA_NAM")) %>% 
   mutate(LGA_COD = as.numeric(LGA_COD)) %>% 
   left_join(.,pop,by = c("LGA_COD" = "LGA_Code")) %>% 

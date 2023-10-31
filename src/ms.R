@@ -190,6 +190,11 @@ CHD1710$CHD_prev <- CHD1710$CHD_prev %>%
   rename(RSE_raw = RSE...17,
          RSE = RSE...9)
 
+## Mortality rates - 3110 ## ---------------------------------------------------
+
+mort3110 <- lapply(list.files("data/Asthmaand CHD raw and modelled prevalence and RSE20231031030142", pattern = ".csv", full.names = T), read.csv)
+names(mort3110) <- c("Asthma_Mort", "CHD_Mort")
+
 ## Grand list ## ---------------------------------------------------------------
 
 all_persons <- list(CHD_ASYLL_Persons = files1408$CHD_ASYLL, # downloaded on 1408

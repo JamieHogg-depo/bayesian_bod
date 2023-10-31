@@ -287,6 +287,13 @@ bind_rows(
     mutate(condition = "CHD",
            metric = "ASYLD"),
   
+  mort3110$CHD_Mort %>% 
+    dplyr::select(raw_prev, point) %>% 
+    setNames(c("Raw", "Bayesian")) %>% 
+    pivot_longer(everything()) %>% 
+    mutate(condition = "CHD",
+           metric = "Mortality"),
+  
   all_persons$CHD_prev_Persons %>% 
     dplyr::select(raw_prev, point) %>% 
     setNames(c("Raw", "Bayesian")) %>% 
@@ -300,6 +307,13 @@ bind_rows(
     mutate(condition = "Asthma",
            metric = "ASYLD",
            name = "Bayesian"),
+  
+  mort3110$Asthma_Mort %>% 
+    dplyr::select(raw_prev, point) %>% 
+    setNames(c("Raw", "Bayesian")) %>% 
+    pivot_longer(everything()) %>% 
+    mutate(condition = "Asthma",
+           metric = "Mortality"),
   
   full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_id")) %>% 
     dplyr::select(raw_ASYLL.x, point) %>% 
@@ -319,7 +333,7 @@ bind_rows(
 ) %>% 
   ggplot(aes(y = log(value+1), x = name, fill = name))+
   geom_boxplot()+
-  facet_wrap(condition~metric, scales = "free")+
+  facet_wrap(condition~metric, scales = "free", nrow = 2)+
   theme_bw()+
   theme(legend.position = "none",
         text = element_text(size = 8))+
