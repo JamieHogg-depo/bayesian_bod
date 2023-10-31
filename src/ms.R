@@ -211,6 +211,10 @@ all_persons$Asthma_prev_Persons <- all_persons$Asthma_prev_Persons %>% setNames(
 
 CHD_YLD_1016 <- read_csv("data/20231016_YLD_LGA_CHD_ALL_Total yld count table_POPCOR.csv")
 
+## DALY ratio - 20231031 ## ----------------------------------------------------
+
+DALYs <- read_csv("data/DALY rank ratio.csv")
+
 ## Apply suppression ## --------------------------------------------------------
 
 raw <- list()

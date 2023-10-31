@@ -574,4 +574,28 @@ jsave(filename = "EPcomp_CHD_ASYLD.jpeg",
       square_size = 1200,
       dpi = 300)
 
+## DALYS ## --------------------------------------------------------------------
+
+DALYs %>% 
+  left_join(.,seifa_ra, by = c("geography_no" = "LGA_Code")) %>% 
+  group_by(year) %>% 
+  mutate(x = order(order(ratio))) %>% 
+  ungroup() %>% 
+  ggplot(aes(x=x, y=ratio, col = ra)) +
+  theme_bw()+
+  geom_hline(yintercept = 7.768, color="blue")+
+  geom_hline(yintercept = 1, linetype = "dotted")+
+  geom_point()+
+  labs(y = "DALY ASR ratio", 
+       x= "",
+       col = "")+
+  facet_wrap(vars(year))+
+  ylim(0,25)+
+  theme(legend.position = "bottom")+
+  guides(col = guide_legend(nrow = 2))
+jsave(filename = "DALYs_ratio.jpeg", 
+      base_folder = "plts/ForPaper", square = T,
+      square_size = 1200,
+      dpi = 300)
+
 ## END SCRIPT ## ---------------------------------------------------------------
