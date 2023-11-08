@@ -47,7 +47,7 @@ all_persons$CHD_ASYLL_Persons %>%
   geom_hline(yintercept = c(0.8,0.2),
              linetype = "dotted")+
   #geom_point()+
-  geom_line()+
+  geom_line(alpha = 0.5)+
   facet_wrap(.~ra)+
   labs(y = "Exceedance probability",
        x = "",
@@ -111,7 +111,7 @@ all_persons$CHD_ASYLD_Persons %>%
   geom_hline(yintercept = c(0.8,0.2),
              linetype = "dotted")+
   #geom_point()+
-  geom_line()+
+  geom_line(alpha = 0.5)+
   facet_wrap(.~ra)+
   labs(y = "Exceedance probability",
        x = "",
@@ -177,7 +177,7 @@ CHDASYLD20231003 %>%
   geom_hline(yintercept = c(0.8,0.2),
              linetype = "dotted")+
   #geom_point()+
-  geom_line()+
+  geom_line(alpha = 0.5)+
   facet_wrap(.~ra)+
   labs(y = "Exceedance probability",
        x = "",
@@ -241,7 +241,7 @@ all_persons$CHD_prev_Persons %>%
   geom_hline(yintercept = c(0.8,0.2),
              linetype = "dotted")+
   #geom_point()+
-  geom_line()+
+  geom_line(alpha = 0.5)+
   facet_wrap(.~ra)+
   labs(y = "Exceedance probability",
        x = "",
@@ -305,7 +305,7 @@ all_persons$Asthma_prev_Persons %>%
   geom_hline(yintercept = c(0.8,0.2),
              linetype = "dotted")+
   #geom_point()+
-  geom_line()+
+  geom_line(alpha = 0.5)+
   facet_wrap(.~ra)+
   labs(y = "Exceedance probability",
        x = "",
@@ -369,7 +369,7 @@ all_persons$Asthma_ASYLD_Persons %>%
   geom_hline(yintercept = c(0.8,0.2),
              linetype = "dotted")+
   #geom_point()+
-  geom_line()+
+  geom_line(alpha = 0.5)+
   facet_wrap(.~ra)+
   labs(y = "Exceedance probability",
        x = "",
@@ -433,7 +433,7 @@ all_persons$Asthma_ASYLL_Persons %>%
   geom_hline(yintercept = c(0.8,0.2),
              linetype = "dotted")+
   #geom_point()+
-  geom_line()+
+  geom_line(alpha = 0.5)+
   facet_wrap(.~ra)+
   labs(y = "Exceedance probability",
        x = "",
