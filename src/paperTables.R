@@ -29,11 +29,11 @@ summ_out[[1]] <- full_join(raw$chd_asyll, all_persons$CHD_ASYLL_Persons, by = c(
 
 ## CHD_Mort
 summ_out[[2]] <- mort3110$CHD_Mort %>% 
-  summarise(mod_sum = foo(1000*point, 2),
+  summarise(mod_sum = foo(100000*point),
             mod_rse = 100*mean(RSE < cut_off),
-            raw_sum = foo(1000*raw_prev, 2),
+            raw_sum = foo(100000*raw_prev),
             raw_rse = 100*mean(RSE_prev_raw < cut_off, na.rm = T),
-            MAD = round(mean(abs(1000*raw_prev - 1000*point)),3)) %>% 
+            MAD = round(mean(abs(100000*raw_prev - 100000*point)),3)) %>% 
   mutate(condition = "CHD",
          metric = "Mortality") %>% 
   relocate(condition, metric) 
@@ -77,11 +77,11 @@ summ_out[[5]] <- full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, b
 
 ## Asthma_Mort
 summ_out[[6]] <- mort3110$Asthma_Mort %>% 
-  summarise(mod_sum = foo(1000*point, 2),
+  summarise(mod_sum = foo(100000*point,2),
             mod_rse = 100*mean(RSE < cut_off),
-            raw_sum = foo(1000*raw_prev, 2),
+            raw_sum = foo(100000*raw_prev,2),
             raw_rse = 100*mean(RSE_prev_raw < cut_off, na.rm = T),
-            MAD = round(mean(abs(1000*raw_prev - 1000*point)),3)) %>% 
+            MAD = round(mean(abs(100000*raw_prev - 100000*point)),3)) %>% 
   mutate(condition = "Asthma",
          metric = "Mortality") %>% 
   relocate(condition, metric) 
@@ -148,7 +148,7 @@ comp_out[[2]] <- mort3110$CHD_Mort %>%
   filter(RSE_prev_raw > 0) %>% 
   mutate(r = RSE_prev_raw/RSE) %>% 
   group_by(N_c) %>% 
-  summarise(MAD = round(mean(abs(1000*raw_prev - 1000*point)),3),
+  summarise(MAD = round(mean(abs(100000*raw_prev - 100000*point))),
             rse_r = median(r, na.rm = T), 
             rse_r_q25 = quantile(r, 0.25, na.rm = T),
             rse_r_q75 = quantile(r, 0.75, na.rm = T),
@@ -218,7 +218,7 @@ comp_out[[6]] <- mort3110$Asthma_Mort %>%
   filter(RSE_prev_raw > 0) %>% 
   mutate(r = RSE_prev_raw/RSE) %>% 
   group_by(N_c) %>% 
-  summarise(MAD = round(mean(abs(1000*raw_prev - 1000*point)),3),
+  summarise(MAD = round(mean(abs(100000*raw_prev - 100000*point))),
             rse_r = median(r, na.rm = T), 
             rse_r_q25 = quantile(r, 0.25, na.rm = T),
             rse_r_q75 = quantile(r, 0.75, na.rm = T),
