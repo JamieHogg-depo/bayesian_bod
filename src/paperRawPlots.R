@@ -119,6 +119,61 @@ full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_
   geom_point()+
   facet_grid(.~T_id)
 
+## Asthma Mortality ## ---------------------------------------------------------
+
+## point estimates
+mort3110$Asthma_Mort %>% 
+  filter(raw_prev > 0) %>% 
+  left_join(.,pop,by = c("geography_no" = "LGA_Code")) %>% 
+  group_by(year) %>% 
+  mutate(N_c = cut_number(N, n = 100, labels = FALSE)) %>% 
+  ungroup() %>% 
+  ggplot(aes(y = 100000*point, ymin = 100000*lower, ymax = 100000*upper,
+             x = 100000*raw_prev,
+             col = N_c))+
+  theme_bw()+
+  geom_errorbar(col = "grey")+
+  geom_point()+
+  geom_abline()+
+  #xlim(0,10)+ # drops 7 LGA by time points
+  labs(y = "Bayesian Mortality (per 100,000)",
+       x = "Raw Mortality (per 100,000)",
+       color = "Population\n(percentiles)")+
+  scale_color_viridis_c()+
+  theme(legend.position = "bottom",
+        text = element_text(size = 8))
+jsave(filename = paste0("compraw_Asthma_Mort.jpeg"), 
+      base_folder = "plts/ForPaper", square = T,
+      square_size = 1200,
+      dpi = 300)
+
+## CHD Mortality ## ---------------------------------------------------------
+
+## point estimates
+mort3110$CHD_Mort %>% 
+  filter(raw_prev > 0) %>% 
+  left_join(.,pop,by = c("geography_no" = "LGA_Code")) %>% 
+  group_by(T_id) %>% 
+  mutate(N_c = cut_number(N, n = 100, labels = FALSE)) %>% 
+  ungroup() %>% 
+  ggplot(aes(y = 100000*point, ymin = 100000*lower, ymax = 100000*upper,
+             x = 100000*raw_prev,
+             col = N_c))+
+  theme_bw()+
+  geom_errorbar(col = "grey")+
+  geom_point()+
+  geom_abline()+
+  labs(y = "Bayesian Mortality (per 100,000)",
+       x = "Raw Mortality (per 100,000)",
+       color = "Population\n(percentiles)")+
+  scale_color_viridis_c()+
+  theme(legend.position = "bottom",
+        text = element_text(size = 8))
+jsave(filename = paste0("compraw_CHD_Mort.jpeg"), 
+      base_folder = "plts/ForPaper", square = T,
+      square_size = 1200,
+      dpi = 300)
+
 ## CHD ASYLL ## ----------------------------------------------------------------
 
 ## point estimates
@@ -347,14 +402,21 @@ jsave(filename = paste0("compraw_ALL.jpeg"),
 ## Compare CHD YLDS ## ---------------------------------------------------------
 
 CHD1710$CHD_YLD %>% 
+  group_by(year) %>% 
+  mutate(N_c = cut_number(N, n = 100, labels = FALSE)) %>% 
+  ungroup() %>% 
+  left_join(.,pop,by = c("geography_no" = "LGA_Code")) %>% 
   ggplot(aes(y = point,
-             x = YLD))+
+             x = YLD, col = N_c))+
   theme_bw()+
-  geom_point()+
-  theme(text = element_text(size = 8))+
   geom_abline()+
-  labs(y = "YLDs (Bayesian)",
-       x = "YLDs (Raw)")
+  geom_point()+
+  labs(y = "Bayesian YLDs (per 100,000)",
+       x = "Raw YLDs (per 100,000)",
+       color = "Population\n(percentiles)")+
+  scale_color_viridis_c()+
+  theme(legend.position = "bottom",
+        text = element_text(size = 8))
 jsave(filename = paste0("compraw_chdyld.jpeg"), 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
