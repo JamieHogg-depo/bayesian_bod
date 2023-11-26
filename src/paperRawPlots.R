@@ -64,8 +64,8 @@ full_join(raw_asthma_3008, all_persons$Asthma_prev_Persons, by = c("lga_name16",
   geom_errorbarh(col = "grey")+
   geom_point()+
   geom_abline()+
-  labs(y = "Bayesian prevalence",
-       x = "Raw prevalence",
+  labs(y = "Bayesian Prevalence",
+       x = "Raw Prevalence",
        color = "Population\n(percentiles)")+
   scale_color_viridis_c()+
   theme(legend.position = "bottom",
@@ -124,15 +124,20 @@ full_join(raw$asthma_asyll, all_persons$Asthma_ASYLL_Persons, by = c("T_id", "M_
 ## point estimates
 mort3110$Asthma_Mort %>% 
   filter(raw_prev > 0) %>% 
+  mutate(raw_se = (raw_prev*RSE_prev_raw)/100,
+         raw_lower = raw_prev - 1.96*raw_se,
+         raw_lower = ifelse(raw_lower < 0, 0, raw_lower),
+         raw_upper = raw_prev + 1.96*raw_se) %>% 
   left_join(.,pop,by = c("geography_no" = "LGA_Code")) %>% 
   group_by(year) %>% 
   mutate(N_c = cut_number(N, n = 100, labels = FALSE)) %>% 
   ungroup() %>% 
   ggplot(aes(y = 100000*point, ymin = 100000*lower, ymax = 100000*upper,
-             x = 100000*raw_prev,
+             x = 100000*raw_prev, xmin = 100000*raw_lower, xmax = 100000*raw_upper,
              col = N_c))+
   theme_bw()+
   geom_errorbar(col = "grey")+
+  geom_errorbarh(col = "grey")+
   geom_point()+
   geom_abline()+
   #xlim(0,10)+ # drops 7 LGA by time points
@@ -152,15 +157,20 @@ jsave(filename = paste0("compraw_Asthma_Mort.jpeg"),
 ## point estimates
 mort3110$CHD_Mort %>% 
   filter(raw_prev > 0) %>% 
+  mutate(raw_se = (raw_prev*RSE_prev_raw)/100,
+         raw_lower = raw_prev - 1.96*raw_se,
+         raw_lower = ifelse(raw_lower < 0, 0, raw_lower),
+         raw_upper = raw_prev + 1.96*raw_se) %>% 
   left_join(.,pop,by = c("geography_no" = "LGA_Code")) %>% 
   group_by(T_id) %>% 
   mutate(N_c = cut_number(N, n = 100, labels = FALSE)) %>% 
   ungroup() %>% 
   ggplot(aes(y = 100000*point, ymin = 100000*lower, ymax = 100000*upper,
-             x = 100000*raw_prev,
+             x = 100000*raw_prev, xmin = 100000*raw_lower, xmax = 100000*raw_upper,
              col = N_c))+
   theme_bw()+
   geom_errorbar(col = "grey")+
+  geom_errorbarh(col = "grey")+
   geom_point()+
   geom_abline()+
   labs(y = "Bayesian Mortality (per 100,000)",
@@ -234,10 +244,10 @@ all_persons$CHD_ASYLD_Persons %>%
              x = raw, xmin = raw_lower, xmax = raw_upper,
              col = N_c))+
   theme_bw()+
-  geom_abline()+
   geom_errorbar(col = "grey")+
   geom_errorbarh(col = "grey")+
   geom_point()+
+  geom_abline()+
   labs(y = "Bayesian ASYLD",
        x = "Raw ASYLD",
        color = "Population\n(percentiles)") +
@@ -314,8 +324,8 @@ all_persons$CHD_prev_Persons %>%
   geom_errorbarh(col = "grey")+
   geom_point()+
   geom_abline()+
-  labs(y = "Bayesian prevalence",
-       x = "Raw prevalence",
+  labs(y = "Bayesian Prevalence",
+       x = "Raw Prevalence",
        color = "Population\n(percentiles)")+
   scale_color_viridis_c()+
   theme(legend.position = "bottom",

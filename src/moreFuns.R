@@ -143,7 +143,7 @@ createCaterpillarPlot <- function(map_temp,
                col = point))+
     theme_bw()+
     geom_errorbar()+
-    geom_point()+
+    geom_point(col = "black", size = 0.3)+
     facet_wrap(.~year) +
     scale_color_viridis_c(begin = 0, end = 1, 
                           direction = -1,

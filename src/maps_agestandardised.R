@@ -12,11 +12,14 @@ for(j in 1:length(all_persons)){
 sp <- unlist(str_split(names(all_persons)[j], "_"))
 condition <- sp[1]
 metric <- sp[2]
+if(metric == "prev"){
+  metric <- "Prevalence"
+}
 sex <- sp[3]
 file_index <- paste0(condition, "_", sex, "_", metric)
 
 # Progress
-message("Condition: ", condition, "\nSex: ", sex, "\nMetric: ", metric)
+message("---- ---- ---- \n---- Condition: ", condition, "\n---- Sex: ", sex, "\n---- Metric: ", metric)
   
 # select temporary dataset
 df_temp <- all_persons[[j]] %>% 
