@@ -45,6 +45,14 @@ jsave(filename = paste0("compraw_ASYLL.jpeg"),
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
+jsave(filename = paste0("Figure2.png"), 
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
+jsave(filename = paste0("Figure2.tiff"), 
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
 
 
 ## Asthma Prevalence ## --------------------------------------------------------
@@ -396,18 +404,26 @@ bind_rows(
            metric = "Proportion")
   
 ) %>% 
-  filter(metric %in% c("ASYLD", "ASYLL")) %>% 
+  #filter(metric %in% c("ASYLD", "ASYLL")) %>% 
   #filter(!metric %in% c("ASYLD", "ASYLL")) %>% 
   ggplot(aes(y = log(value+1), x = name, fill = name))+
   geom_boxplot()+
-  #facet_wrap(condition~metric, scales = "free", nrow = 2)+
-  facet_grid(condition~metric, scales = "free")+
+  facet_wrap(condition~metric, scales = "free", nrow = 2)+
+  #facet_grid(condition~metric, scales = "free")+
   theme_bw()+
   theme(legend.position = "none",
         text = element_text(size = 8))+
   labs(y = "Point estimates (log scale)",
        x = "")
 jsave(filename = paste0("compraw_ALL.jpeg"), 
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
+jsave(filename = "Figure1.png", 
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
+jsave(filename = "Figure1.tiff", 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)

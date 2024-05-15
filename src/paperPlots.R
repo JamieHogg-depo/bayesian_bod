@@ -322,6 +322,14 @@ jsave(filename = "EPtemporal_sep_Asthma_prev_Persons.jpeg",
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
+jsave(filename = "Figure5.png", 
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
+jsave(filename = "Figure5.tiff", 
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
 
 ## -----
 all_persons$Asthma_ASYLD_Persons %>% 

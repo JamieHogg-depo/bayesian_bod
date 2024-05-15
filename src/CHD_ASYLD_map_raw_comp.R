@@ -81,6 +81,14 @@ jsave(plot = out_r, filename = paste0("map_CHD_Persons_ASYLD_raw.jpeg"),
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
+jsave(plot = out_r, filename = "Figure3b.png", 
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
+jsave(plot = out_r, filename = "Figure3b.tiff", 
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
 
 ## ALL ## ----------------------------------------------------------------------
 

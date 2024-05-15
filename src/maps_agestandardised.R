@@ -56,6 +56,20 @@ jsave(plot = full_inset_plt, filename = paste0("map_", file_index, ".jpeg"),
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
+	  
+	if(file_index == "CHD_Persons_ASYLD"){
+	jsave(plot = full_inset_plt, filename = "Figure3a.png", 
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
+	jsave(plot = full_inset_plt, filename = "Figure3a.tiff", 
+      base_folder = "plts/ForPaper", square = F,
+      square_size = 1200,
+      dpi = 300)
+	}
+	  
+	  
+	  
 jsave(plot = cat_plot, filename = paste0("cat_", file_index, ".jpeg"), 
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
@@ -207,7 +221,30 @@ jsave(plot = full_inset_plt, filename = paste0("mapEP_", file_index, ".jpeg"),
       base_folder = "plts/ForPaper", square = F,
       square_size = 1200,
       dpi = 300)
+	  
+	if(file_index == "Asthma_Persons_ASYLL"){
+	jsave(plot = full_inset_plt, filename = "Figure4a.png", 
+		  base_folder = "plts/ForPaper", square = F,
+		  square_size = 1200,
+		  dpi = 300)
+	jsave(plot = full_inset_plt, filename = "Figure4a.tiff", 
+		  base_folder = "plts/ForPaper", square = F,
+		  square_size = 1200,
+		  dpi = 300)
+	}
+	
+	if(file_index == "Asthma_Persons_ASYLD"){
+	jsave(plot = full_inset_plt, filename = "Figure4b.png", 
+		  base_folder = "plts/ForPaper", square = F,
+		  square_size = 1200,
+		  dpi = 300)
+	jsave(plot = full_inset_plt, filename = "Figure4b.tiff", 
+		  base_folder = "plts/ForPaper", square = F,
+		  square_size = 1200,
+		  dpi = 300)
+	}
 
+	  
 }
 
 ## Modelled baseline - CHD ASYLD ## --------------------------------------------
